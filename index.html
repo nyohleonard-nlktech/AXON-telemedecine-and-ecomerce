@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>AxonForge — Engineer · Deliver · Innovate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#07101F;--surface:#0D1C38;--surface2:#132444;--surface3:#1A2E52;
+  --navy:#1A3A7C;--blue:#2563EB;--blue-light:#60A5FA;
+  --blue-glow:rgba(37,99,235,0.25);
+  --orange:#F97316;--orange-dark:#EA6200;--orange-glow:rgba(249,115,22,0.25);
+  --text:#E8F0FF;--text-muted:#7A99C0;
+  --border:rgba(37,99,235,0.18);--border-o:rgba(249,115,22,0.22);
+  --green:#10B981;--red:#EF4444;--yellow:#F59E0B;
+  --radius:10px;--radius-lg:16px;
+  --shadow-b:0 4px 24px rgba(37,99,235,0.2);
+  --shadow-o:0 4px 24px rgba(249,115,22,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;overflow-x:hidden;}
+img{max-width:100%;object-fit:cover;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--surface);}
+::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:60px;background:rgba(7,16,31,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.15rem;cursor:pointer;flex-shrink:0;letter-spacing:.05em;text-decoration:none;}
+.nav-logo .ax{color:var(--blue-light);}
+.nav-logo .fo{color:var(--orange);}
+.nav-desktop{display:none;align-items:center;gap:2px;}
+.nav-lnk{background:transparent;border:none;color:var(--text-muted);font-family:'Exo 2',sans-serif;font-weight:600;font-size:.76rem;letter-spacing:.05em;text-transform:uppercase;padding:8px 11px;border-radius:6px;cursor:pointer;transition:all .2s;}
+.nav-lnk:hover{color:var(--text);background:rgba(37,99,235,.07);}
+.nav-actions{display:flex;align-items:center;gap:7px;}
+.nav-badge-w{position:relative;display:inline-flex;}
+.nav-badge{position:absolute;top:-5px;right:-5px;background:var(--orange);color:#fff;font-size:.56rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;}
+.nav-badge.on{display:flex;}
+.btn-ico{background:transparent;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:8px;border-radius:6px;transition:all .2s;}
+.btn-ico:hover{color:var(--text);background:rgba(255,255,255,.05);}
+.btn-cta{background:var(--orange);color:#fff;font-family:'Exo 2',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;padding:9px 16px;border:none;border-radius:6px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-cta:hover{background:var(--orange-dark);}
+.hbg{display:flex;flex-direction:column;justify-content:center;gap:5px;background:transparent;border:none;cursor:pointer;padding:8px;border-radius:6px;}
+.hbg span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s;}
+.hbg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hbg.open span:nth-child(2){opacity:0;}
+.hbg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+
+/* SIDEBAR */
+.sb-overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s;}
+.sb-overlay.on{opacity:1;pointer-events:all;}
+.sb{position:fixed;top:0;left:-290px;bottom:0;z-index:850;width:290px;background:var(--surface);border-right:1px solid var(--border);transition:left .3s;overflow-y:auto;display:flex;flex-direction:column;}
+.sb.open{left:0;}
+.sb-head{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.sb-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.05rem;}
+.sb-logo .ax{color:var(--blue-light);}
+.sb-logo .fo{color:var(--orange);}
+.sb-x{background:transparent;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;}
+.sb-nav{padding:10px 0;flex:1;}
+.sb-sec{padding:8px 20px 4px;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);}
+.sb-item{display:flex;align-items:center;gap:12px;padding:13px 20px;color:var(--text-muted);font-weight:600;font-size:.87rem;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;transition:all .2s;}
+.sb-item:hover{background:rgba(249,115,22,.06);color:var(--text);}
+.sb-item.on{color:var(--orange);background:rgba(249,115,22,.07);}
+.sb-item .ic{font-size:1.05rem;flex-shrink:0;}
+.sb-item .bgs{margin-left:auto;background:var(--orange);color:#fff;font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:99px;}
+.sb-div{height:1px;background:var(--border);margin:8px 20px;}
+.sb-user{padding:16px 20px;border-top:1px solid var(--border);}
+.sb-uname{font-weight:700;font-size:.9rem;}
+.sb-urole{font-size:.68rem;color:var(--orange);text-transform:uppercase;letter-spacing:.1em;margin-top:2px;}
+
+/* PAGE SYSTEM */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* SHARED */
+section{padding:64px 20px;}
+@media(min-width:768px){section{padding:80px 40px;}}
+@media(min-width:1200px){section{padding:100px max(60px,calc((100vw - 1200px)/2));}}
+
+.tag{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.tag::before{content:'';width:20px;height:1.5px;background:var(--orange);}
+.sec-title{font-family:'Orbitron',monospace;font-size:clamp(1.5rem,5vw,2.4rem);font-weight:900;line-height:1.08;margin-bottom:14px;}
+.sec-sub{font-size:.95rem;color:var(--text-muted);line-height:1.7;max-width:520px;margin-bottom:32px;}
+
+/* BUTTONS */
+.btn{font-family:'Exo 2',sans-serif;font-weight:700;font-size:.84rem;letter-spacing:.07em;text-transform:uppercase;padding:13px 26px;border:none;border-radius:var(--radius);cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
+.btn-o{background:var(--orange);color:#fff;}
+.btn-o:hover{background:var(--orange-dark);}
+.btn-b{background:var(--blue);color:#fff;}
+.btn-b:hover{background:#1D4ED8;}
+.btn-oo{background:transparent;color:var(--orange);border:1.5px solid var(--orange);}
+.btn-oo:hover{background:rgba(249,115,22,.08);}
+.btn-ob{background:transparent;color:var(--blue-light);border:1.5px solid var(--blue);}
+.btn-ob:hover{background:rgba(37,99,235,.08);}
+.btn-ghost{background:transparent;color:var(--text-muted);}
+.btn-ghost:hover{color:var(--text);}
+.btn-blk{display:block;width:100%;text-align:center;}
+.btn-dng{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.28);}
+.btn-dng:hover{background:rgba(239,68,68,.22);}
+.btn-sm{padding:9px 15px;font-size:.73rem;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* FORMS */
+.fg{margin-bottom:18px;}
+.fl{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:7px;}
+.fi{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius);padding:13px 16px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:.92rem;outline:none;transition:border-color .2s;-webkit-appearance:none;}
+.fi:focus{border-color:var(--orange);}
+.fi.err{border-color:var(--red);}
+select.fi option{background:var(--surface2);}
+textarea.fi{height:90px;resize:vertical;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:480px){.fg2{grid-template-columns:1fr;}}
+
+/* ALERTS */
+.alert{padding:11px 15px;border-radius:var(--radius);font-size:.84rem;margin-bottom:13px;display:none;line-height:1.5;}
+.alert.on{display:block;}
+.al-err{background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.28);color:var(--red);}
+.al-ok{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.28);color:var(--green);}
+.al-warn{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.28);color:var(--yellow);}
+.al-info{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.28);color:var(--blue-light);}
+
+/* BADGES */
+.badge{display:inline-block;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:99px;font-weight:700;}
+.bd-o{color:var(--orange);border:1px solid var(--orange);background:rgba(249,115,22,.07);}
+.bd-b{color:var(--blue-light);border:1px solid var(--blue);background:rgba(37,99,235,.07);}
+.bd-g{color:var(--green);border:1px solid var(--green);background:rgba(16,185,129,.07);}
+.bd-r{color:var(--red);border:1px solid var(--red);background:rgba(239,68,68,.07);}
+.bd-y{color:var(--yellow);border:1px solid var(--yellow);background:rgba(245,158,11,.07);}
+.bd-cs{color:#888;border:1px solid #444;background:rgba(255,255,255,.03);}
+
+/* PAGE HEADER */
+.pg-hd{padding:80px 20px 26px;background:var(--surface);border-bottom:1px solid var(--border);}
+.pg-hd h1{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:700;margin-bottom:5px;}
+.pg-hd h1 .o{color:var(--orange);}
+.pg-hd p{font-size:.87rem;color:var(--text-muted);}
+@media(min-width:768px){.pg-hd{padding:90px 40px 30px;}}
+
+/* TAB BAR */
+.tbar{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 16px;overflow-x:auto;}
+.tbtn{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-family:'Exo 2',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;padding:13px 14px;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.tbtn.on{color:var(--orange);border-bottom-color:var(--orange);}
+.tbtn:hover{color:var(--text);}
+.tpane{display:none;}
+.tpane.on{display:block;}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.card-body{padding:20px;}
+
+/* AVATAR */
+.av-init{width:42px;height:42px;border-radius:50%;background:var(--navy);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:700;font-size:.75rem;color:var(--blue-light);flex-shrink:0;}
+.av-img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border);}
+
+/* GPS */
+.btn-gps{width:100%;background:rgba(16,185,129,.09);border:1px solid var(--green);color:var(--green);font-family:'Exo 2',sans-serif;font-weight:700;font-size:.77rem;letter-spacing:.07em;text-transform:uppercase;padding:12px;border-radius:var(--radius);cursor:pointer;transition:all .2s;margin-top:6px;}
+.btn-gps:hover{background:rgba(16,185,129,.18);}
+.btn-gps:disabled{opacity:.4;cursor:not-allowed;}
+.gps-res{font-size:.72rem;color:var(--green);margin-top:6px;padding:8px 12px;background:rgba(16,185,129,.06);border-radius:6px;border:1px solid rgba(16,185,129,.2);display:none;word-break:break-all;line-height:1.6;}
+.gps-res.on{display:block;}
+.gps-res a{color:var(--blue-light);text-decoration:none;}
+
+/* SPINNER */
+.sp{display:inline-block;width:15px;height:15px;border:2px solid rgba(249,115,22,.3);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:7px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* IMAGE UPLOAD */
+.img-box{border:2px dashed var(--border);border-radius:var(--radius);padding:20px 12px;text-align:center;cursor:pointer;background:var(--surface2);transition:border-color .2s;}
+.img-box:hover{border-color:var(--orange);}
+.img-box input{display:none;}
+.img-prev{width:100%;height:110px;object-fit:cover;border-radius:var(--radius);margin-top:10px;}
+.img-lbl{font-size:.8rem;color:var(--text-muted);}
+.img-ico{font-size:1.7rem;margin-bottom:5px;}
+.id-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.id-box{border:2px dashed var(--border);border-radius:var(--radius);padding:18px 8px;text-align:center;cursor:pointer;background:var(--surface2);transition:border-color .2s;}
+.id-box:hover{border-color:var(--orange);}
+.id-box input{display:none;}
+.id-thumb{width:100%;height:68px;object-fit:cover;border-radius:6px;margin-top:6px;}
+.id-lbl{font-size:.72rem;color:var(--text-muted);}
+
+/* PRODUCT GRID */
+.mkt-ctrl{padding:12px 14px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.srch-wrap{flex:1;min-width:160px;position:relative;}
+.srch-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.88rem;}
+.srch{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 12px 11px 34px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:.87rem;outline:none;transition:border-color .2s;}
+.srch:focus{border-color:var(--orange);}
+.flt-sel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 13px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:.82rem;outline:none;-webkit-appearance:none;cursor:pointer;}
+.flt-sel option{background:var(--surface2);}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:14px;}
+@media(min-width:600px){.pgrid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:1000px){.pgrid{grid-template-columns:repeat(4,1fr);padding:20px;}}
+.pcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:all .25s;}
+.pcard:hover{border-color:var(--orange);transform:translateY(-3px);box-shadow:var(--shadow-o);}
+.pthumb{height:100px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;font-size:2.6rem;}
+.pthumb img{width:100%;height:100%;object-fit:cover;}
+.ptype-b{position:absolute;top:6px;right:6px;font-size:.56rem;padding:2px 7px;border-radius:99px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;}
+.vtag{position:absolute;bottom:5px;left:6px;background:rgba(0,0,0,.76);color:var(--text-muted);font-size:.57rem;padding:2px 7px;border-radius:4px;}
+.pbody{padding:11px;}
+.pname{font-weight:700;font-size:.82rem;margin-bottom:3px;line-height:1.3;}
+.pcat{font-size:.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.pprice{font-family:'Orbitron',monospace;font-size:.88rem;color:var(--orange);font-weight:700;margin-bottom:9px;}
+.btn-cart{width:100%;background:var(--blue);color:#fff;font-weight:700;font-size:.71rem;letter-spacing:.06em;text-transform:uppercase;padding:9px;border:none;border-radius:6px;cursor:pointer;transition:background .2s;}
+.btn-cart:hover{background:#1D4ED8;}
+.btn-cart:disabled{background:var(--surface2);color:var(--text-muted);cursor:not-allowed;}
+.empty{padding:60px 20px;text-align:center;color:var(--text-muted);}
+.empty-ic{font-size:3.2rem;margin-bottom:14px;}
+.empty-tt{font-family:'Orbitron',monospace;font-size:.95rem;color:var(--text);margin-bottom:8px;}
+
+/* CART */
+.cart-items{padding:14px;display:flex;flex-direction:column;gap:11px;}
+.ci{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;gap:13px;align-items:center;}
+.ci-img{width:50px;height:50px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;overflow:hidden;}
+.ci-img img{width:100%;height:100%;object-fit:cover;}
+.ci-info{flex:1;}
+.ci-name{font-weight:700;font-size:.88rem;margin-bottom:2px;}
+.ci-vnd{font-size:.7rem;color:var(--text-muted);}
+.ci-price{font-family:'Orbitron',monospace;font-size:.86rem;color:var(--orange);margin-top:4px;}
+.ci-qty{display:flex;align-items:center;gap:7px;margin-top:5px;}
+.qty-btn{width:25px;height:25px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.qty-n{font-weight:700;font-size:.86rem;min-width:18px;text-align:center;}
+.btn-rm{background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.24);color:var(--red);border-radius:6px;padding:6px 9px;font-size:.73rem;cursor:pointer;font-family:'Exo 2',sans-serif;flex-shrink:0;}
+.c-sum{margin:0 14px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;}
+.c-row{display:flex;justify-content:space-between;font-size:.84rem;color:var(--text-muted);margin-bottom:7px;}
+.c-tot{display:flex;justify-content:space-between;font-family:'Orbitron',monospace;font-size:1.05rem;font-weight:700;color:var(--orange);border-top:1px solid var(--border);padding-top:11px;margin-top:5px;margin-bottom:16px;}
+.escrow-note{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);border-radius:8px;padding:11px;font-size:.77rem;color:var(--blue-light);line-height:1.6;margin-bottom:14px;}
+
+/* PICK & DROP */
+.pd-wrap{padding:14px;max-width:620px;margin:0 auto;}
+.pd-sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:14px;}
+.pd-ttl{font-family:'Orbitron',monospace;font-size:.84rem;color:var(--orange);margin-bottom:15px;display:flex;align-items:center;gap:8px;}
+.pd-ttl::before{content:'';width:14px;height:2px;background:var(--orange);}
+.c2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:480px){.c2{grid-template-columns:1fr;}}
+
+/* AUTH */
+.auth-pg{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:78px 18px 36px;}
+.auth-card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.auth-hd{background:linear-gradient(135deg,var(--navy),var(--surface));padding:26px 22px;border-bottom:1px solid var(--border);}
+.auth-hd h2{font-family:'Orbitron',monospace;font-size:1.05rem;font-weight:700;margin-bottom:4px;}
+.auth-hd h2 .o{color:var(--orange);}
+.auth-hd p{font-size:.81rem;color:var(--text-muted);}
+.auth-bd{padding:22px;}
+.auth-tabs{display:flex;margin-bottom:22px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.at-btn{flex:1;padding:11px;text-align:center;font-weight:700;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;background:var(--surface2);color:var(--text-muted);border:none;font-family:'Exo 2',sans-serif;transition:all .2s;}
+.at-btn.on{background:var(--orange);color:#fff;}
+.type-sel{margin-bottom:22px;}
+.type-lbl{font-size:.71rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:9px;display:block;}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.type-opt{padding:11px 8px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .2s;text-align:center;}
+.type-opt:hover{border-color:var(--orange);}
+.type-opt.on{border-color:var(--orange);background:rgba(249,115,22,.08);}
+.type-opt .to-ic{font-size:1.3rem;margin-bottom:4px;}
+.type-opt .to-nm{font-size:.77rem;font-weight:700;}
+.type-opt .to-ds{font-size:.63rem;color:var(--text-muted);margin-top:2px;}
+
+/* DASHBOARDS */
+.dash-layout{display:flex;min-height:calc(100vh - 60px);padding-top:60px;}
+.dash-sb{width:260px;background:var(--surface);border-right:1px solid var(--border);flex-shrink:0;display:none;overflow-y:auto;}
+@media(min-width:1024px){.dash-sb{display:block;}}
+.dub-card{padding:18px 16px;margin:16px 12px 18px;background:linear-gradient(135deg,var(--navy),var(--surface2));border:1px solid var(--border);border-radius:var(--radius);}
+.dub-name{font-weight:700;font-size:.93rem;margin:8px 0 2px;}
+.dub-role{font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);}
+.dn-item{display:flex;align-items:center;gap:11px;padding:12px 18px;color:var(--text-muted);font-weight:600;font-size:.84rem;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;transition:all .2s;}
+.dn-item:hover{background:rgba(249,115,22,.06);color:var(--text);}
+.dn-item.on{color:var(--orange);background:rgba(249,115,22,.08);}
+.dash-main{flex:1;overflow-y:auto;}
+.dc{padding:22px;max-width:880px;margin:0 auto;}
+.dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:11px;}
+.dt{font-family:'Orbitron',monospace;font-size:1.05rem;font-weight:700;}
+.dt .o{color:var(--orange);}
+.stats-g{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:22px;}
+@media(min-width:600px){.stats-g{grid-template-columns:repeat(3,1fr);}}
+.s-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px;text-align:center;}
+.s-val{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:700;color:var(--orange);}
+.s-lbl{font-size:.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px;}
+.pm-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:22px;}
+.pm-ttl{font-family:'Orbitron',monospace;font-size:.86rem;color:var(--blue-light);margin-bottom:17px;display:flex;align-items:center;gap:8px;}
+.pm-ttl::before{content:'';width:13px;height:2px;background:var(--blue);}
+.em-pk{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px;}
+.em-opt{width:40px;height:40px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.em-opt.on{border-color:var(--orange);background:rgba(249,115,22,.09);}
+.em-opt:hover{border-color:var(--orange);}
+.prow{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;gap:11px;align-items:center;margin-bottom:9px;}
+.pr-img{width:44px;height:44px;border-radius:8px;background:var(--surface2);font-size:1.4rem;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.pr-img img{width:100%;height:100%;object-fit:cover;}
+.pr-info{flex:1;}
+.pr-name{font-weight:700;font-size:.86rem;}
+.pr-meta{font-size:.68rem;color:var(--text-muted);margin-top:2px;}
+.pr-price{font-family:'Orbitron',monospace;font-size:.83rem;color:var(--orange);margin-top:3px;}
+
+/* ADMIN */
+.adm-hd{padding:20px 22px;background:linear-gradient(135deg,rgba(249,115,22,.11),rgba(37,99,235,.07));border-bottom:1px solid var(--border);}
+.adm-ttl{font-family:'Orbitron',monospace;font-size:1.15rem;font-weight:900;color:var(--orange);}
+.adm-sub{font-size:.81rem;color:var(--text-muted);margin-top:3px;}
+.adm-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px;}
+@media(min-width:600px){.adm-stats{grid-template-columns:repeat(4,1fr);}}
+.as-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px;text-align:center;}
+.as-val{font-family:'Orbitron',monospace;font-size:1.5rem;font-weight:700;color:var(--orange);}
+.as-lbl{font-size:.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px;}
+.adm-sec{padding:0 14px 18px;}
+.adm-sttl{font-family:'Orbitron',monospace;font-size:.83rem;font-weight:700;color:var(--orange);margin:18px 0 13px;border-bottom:1px solid rgba(249,115,22,.18);padding-bottom:7px;letter-spacing:.07em;}
+.arow{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.ar-ttl{font-weight:700;font-size:.88rem;margin-bottom:4px;}
+.ar-sub{font-size:.74rem;color:var(--text-muted);line-height:1.7;}
+.ar-acts{margin-top:9px;display:flex;gap:7px;flex-wrap:wrap;}
+.btn-conf{background:rgba(16,185,129,.11);border:1px solid rgba(16,185,129,.28);color:var(--green);font-family:'Exo 2',sans-serif;font-weight:700;font-size:.71rem;padding:7px 13px;border-radius:6px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;}
+.btn-rej{background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.28);color:var(--red);font-family:'Exo 2',sans-serif;font-weight:700;font-size:.71rem;padding:7px 13px;border-radius:6px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;}
+.btn-cht{background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.28);color:var(--blue-light);font-family:'Exo 2',sans-serif;font-weight:700;font-size:.71rem;padding:7px 13px;border-radius:6px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;}
+.pend-b{display:inline-block;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);color:var(--yellow);font-size:.6rem;padding:2px 8px;border-radius:99px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-top:4px;}
+.id-prev{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.id-prev img{width:100%;height:76px;object-fit:cover;border-radius:6px;border:1px solid var(--border);}
+.o-item{background:var(--surface);border:1px solid rgba(16,185,129,.14);border-left:3px solid var(--green);border-radius:var(--radius);padding:13px;margin-bottom:9px;}
+.o-type{font-family:'Orbitron',monospace;font-size:.7rem;color:var(--green);margin-bottom:5px;}
+.o-det{font-size:.81rem;color:var(--text-muted);line-height:1.7;}
+.o-time{font-size:.67rem;color:var(--blue-light);margin-top:5px;}
+.o-tot{font-family:'Orbitron',monospace;font-size:.92rem;color:var(--orange);font-weight:700;margin-top:4px;}
+
+/* CHAT */
+.chat-layout{display:flex;flex-direction:column;height:calc(100vh - 60px);padding-top:60px;}
+.chat-hd{padding:13px 17px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:13px;flex-shrink:0;}
+.chat-bk{background:transparent;border:none;color:var(--orange);font-size:1.3rem;cursor:pointer;flex-shrink:0;}
+.chat-hd-info{flex:1;}
+.chat-ref{font-family:'Orbitron',monospace;font-size:.68rem;color:var(--blue-light);letter-spacing:.1em;}
+.chat-nm{font-weight:700;font-size:.9rem;margin-top:2px;}
+.chat-st{font-size:.63rem;color:var(--green);text-transform:uppercase;letter-spacing:.1em;margin-top:2px;}
+.chat-loc{padding:9px 15px;background:rgba(16,185,129,.06);border-bottom:1px solid rgba(16,185,129,.15);font-size:.73rem;color:var(--green);display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.chat-loc a{color:var(--blue-light);text-decoration:none;font-size:.67rem;}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;}
+.msg{max-width:82%;padding:10px 13px;border-radius:12px;font-size:.84rem;line-height:1.5;}
+.msg.sent{align-self:flex-end;background:var(--orange);color:#fff;border-bottom-right-radius:3px;}
+.msg.recv{align-self:flex-start;background:var(--surface);border:1px solid var(--border);border-bottom-left-radius:3px;}
+.msg.sys{align-self:center;background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2);color:var(--text-muted);font-size:.74rem;border-radius:99px;padding:6px 14px;max-width:92%;text-align:center;}
+.msg-sndr{font-size:.63rem;font-weight:700;margin-bottom:3px;opacity:.7;}
+.msg-time{font-size:.59rem;opacity:.55;margin-top:3px;text-align:right;}
+.msg.recv .msg-time{text-align:left;}
+.chat-bar{padding:11px 13px;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:9px;align-items:flex-end;flex-shrink:0;}
+.chat-inp{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:11px 15px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:.87rem;outline:none;resize:none;max-height:80px;transition:border-color .2s;}
+.chat-inp:focus{border-color:var(--orange);}
+.btn-send{background:var(--orange);color:#fff;border:none;border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:1.1rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.btn-send:hover{background:var(--orange-dark);}
+.bc-list{padding:14px;display:flex;flex-direction:column;gap:11px;}
+.bc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:15px;cursor:pointer;transition:all .2s;}
+.bc-card:hover{border-color:var(--orange);transform:translateY(-2px);}
+.bc-ref{font-family:'Orbitron',monospace;font-size:.68rem;color:var(--orange);}
+.bc-name{font-weight:700;font-size:.88rem;margin:3px 0;}
+.bc-route{font-size:.77rem;color:var(--text-muted);}
+.bc-meta{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;}
+.bc-time{font-size:.64rem;color:var(--text-muted);}
+
+/* MODALS */
+.modal-ov{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:18px;}
+.modal-ov.on{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border-o);border-radius:var(--radius-lg);padding:30px 22px;max-width:380px;width:100%;text-align:center;box-shadow:var(--shadow-o);}
+.modal-ic{font-size:2.6rem;margin-bottom:14px;}
+.modal-tt{font-family:'Orbitron',monospace;font-size:1.05rem;font-weight:700;color:var(--orange);margin-bottom:9px;}
+.modal-bd{font-size:.87rem;color:var(--text-muted);line-height:1.7;margin-bottom:22px;}
+.modal-acts{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;}
+.pm-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);max-width:400px;width:100%;overflow:hidden;}
+.pm-img{height:140px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);overflow:hidden;font-size:3.8rem;}
+.pm-img img{width:100%;height:100%;object-fit:cover;}
+.pm-body{padding:19px;}
+.pm-name{font-family:'Orbitron',monospace;font-size:.97rem;font-weight:700;margin-bottom:4px;}
+.pm-vnd{font-size:.74rem;color:var(--orange);margin-bottom:9px;}
+.pm-desc{font-size:.84rem;color:var(--text-muted);line-height:1.7;margin-bottom:11px;}
+.pm-price{font-family:'Orbitron',monospace;font-size:1.25rem;color:var(--orange);font-weight:700;margin-bottom:17px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--orange);color:var(--orange);font-size:.81rem;font-weight:600;padding:10px 20px;border-radius:99px;z-index:1100;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none;max-width:92%;text-align:center;}
+.toast.on{opacity:1;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:90px 20px 56px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(37,99,235,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.04) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at 50% 40%,black 20%,transparent 82%);}
+.hero-gb{position:absolute;top:12%;left:8%;width:360px;height:360px;background:radial-gradient(circle,rgba(37,99,235,.11) 0%,transparent 70%);animation:glw 5s ease-in-out infinite;}
+.hero-go{position:absolute;top:32%;right:4%;width:230px;height:230px;background:radial-gradient(circle,rgba(249,115,22,.1) 0%,transparent 70%);animation:glw 4s ease-in-out infinite reverse;}
+@keyframes glw{0%,100%{transform:scale(1);opacity:.55;}50%{transform:scale(1.18);opacity:1;}}
+.h-content{position:relative;z-index:1;max-width:580px;}
+.h-ey{font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--orange);margin-bottom:18px;display:flex;align-items:center;gap:9px;}
+.h-ey::before{content:'';width:26px;height:1.5px;background:var(--orange);}
+.h-title{font-family:'Orbitron',monospace;font-size:clamp(2.2rem,9vw,4rem);font-weight:900;line-height:1.04;margin-bottom:10px;}
+.h-title .bl{color:var(--blue-light);}
+.h-title .or{color:var(--orange);}
+.h-tl{font-size:.73rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
+.h-sub{font-size:.97rem;color:var(--text-muted);font-weight:300;line-height:1.7;max-width:440px;margin-bottom:34px;}
+.h-ctas{display:flex;gap:13px;flex-wrap:wrap;}
+.h-vis{display:flex;justify-content:center;margin-top:44px;position:relative;}
+.drone-wrap{animation:flt 3.8s ease-in-out infinite;filter:drop-shadow(0 0 22px rgba(249,115,22,0.38));}
+@keyframes flt{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-16px) rotate(1deg);}}
+.drone-shad{width:170px;height:14px;background:radial-gradient(ellipse,rgba(249,115,22,.18),transparent);margin:8px auto 0;animation:shd 3.8s ease-in-out infinite;}
+@keyframes shd{0%,100%{width:170px;opacity:.55;}50%{width:130px;opacity:.25;}}
+.h-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:40px;}
+.hs{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 9px;text-align:center;}
+.hs-v{font-family:'Orbitron',monospace;font-size:1.25rem;font-weight:700;color:var(--orange);}
+.hs-l{font-size:.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-top:3px;}
+
+/* VERTICALS */
+.vc-grid{display:grid;gap:15px;margin-top:30px;}
+@media(min-width:768px){.vc-grid{grid-template-columns:1fr 1fr;}}
+.vc{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;position:relative;overflow:hidden;transition:all .3s;}
+.vc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.vc.co::before{background:linear-gradient(90deg,var(--blue),transparent);}
+.vc.me::before{background:linear-gradient(90deg,var(--orange),transparent);}
+.vc:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.vc-ic{font-size:2.3rem;margin-bottom:15px;}
+.vc-tt{font-family:'Orbitron',monospace;font-size:1.05rem;font-weight:700;margin-bottom:9px;}
+.vc.co .vc-tt{color:var(--blue-light);}
+.vc.me .vc-tt{color:var(--orange);}
+.vc-ds{font-size:.87rem;color:var(--text-muted);line-height:1.7;margin-bottom:15px;}
+.vc-feats{display:flex;flex-direction:column;gap:5px;}
+.vc-f{display:flex;align-items:center;gap:7px;font-size:.81rem;color:var(--text-muted);}
+.vc-f::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;margin-top:30px;}
+.s-item{display:flex;gap:17px;}
+.s-line{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.s-num{width:37px;height:37px;border-radius:50%;background:var(--surface2);border:2px solid var(--orange);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-weight:700;font-size:.73rem;color:var(--orange);flex-shrink:0;}
+.s-conn{width:2px;flex:1;min-height:34px;margin:4px 0;background:linear-gradient(var(--orange),transparent);}
+.s-item:last-child .s-conn{display:none;}
+.s-body{padding-bottom:30px;}
+.s-tt{font-weight:700;font-size:.94rem;margin-bottom:5px;}
+.s-ds{font-size:.83rem;color:var(--text-muted);line-height:1.6;}
+
+/* COVERAGE */
+.cov-map{height:210px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;margin-top:26px;}
+.mp{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--orange);box-shadow:0 0 9px var(--orange);animation:pdot 2s ease-out infinite;}
+@keyframes pdot{0%{transform:scale(1);opacity:1;}70%{transform:scale(3);opacity:0;}100%{transform:scale(1);opacity:0;}}
+.cov-lbl{font-family:'Orbitron',monospace;font-size:.83rem;color:var(--orange);z-index:1;}
+.cov-sub{font-size:.77rem;color:var(--text-muted);z-index:1;margin-top:3px;}
+.z-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px;}
+.z-chip{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px;}
+.z-name{font-weight:700;font-size:.84rem;}
+.z-st{font-size:.67rem;text-transform:uppercase;letter-spacing:.1em;margin-top:3px;}
+.z-st.act{color:var(--green);}
+.z-st.soon{color:var(--orange);}
+
+/* FAQ */
+.faq-list{margin-top:26px;display:flex;flex-direction:column;gap:9px;}
+.fi-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.fi-q{padding:15px 17px;font-weight:600;font-size:.88rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:9px;}
+.fi-arr{width:19px;height:19px;flex-shrink:0;border:1px solid var(--border-o);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.63rem;color:var(--orange);transition:transform .3s;}
+.fi-a{max-height:0;overflow:hidden;transition:max-height .4s;font-size:.84rem;color:var(--text-muted);line-height:1.7;}
+.fi-ai{padding:0 17px 15px;}
+.fi-item.open .fi-a{max-height:300px;}
+.fi-item.open .fi-arr{transform:rotate(45deg);}
+
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:44px 20px 30px;}
+@media(min-width:768px){.ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;}}
+.ft-logo{font-family:'Orbitron',monospace;font-size:1.15rem;font-weight:900;margin-bottom:9px;}
+.ft-logo .ax{color:var(--blue-light);}
+.ft-logo .fo{color:var(--orange);}
+.ft-tg{font-size:.81rem;color:var(--text-muted);line-height:1.6;max-width:260px;margin-bottom:18px;}
+.ft-col-tt{font-family:'Orbitron',monospace;font-size:.76rem;color:var(--text);margin-bottom:13px;letter-spacing:.07em;}
+.ft-lnk{display:block;color:var(--text-muted);text-decoration:none;font-size:.84rem;margin-bottom:7px;cursor:pointer;transition:color .2s;}
+.ft-lnk:hover{color:var(--orange);}
+.ft-bot{margin-top:34px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px;font-size:.71rem;color:var(--text-muted);}
+.ft-bot .hl{color:var(--orange);}
+
+/* COMING SOON */
+.cs-wrap{text-align:center;padding:36px 20px;}
+.cs-icon{font-size:3rem;margin-bottom:14px;}
+.cs-tt{font-family:'Orbitron',monospace;color:var(--orange);margin-bottom:9px;}
+.cs-sub{font-size:.87rem;color:var(--text-muted);line-height:1.7;max-width:340px;margin:0 auto 18px;}
+
+/* TEAM BADGES */
+.tm-badges{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px;}
+.tm-b{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 13px;font-size:.77rem;}
+.tm-b span{color:var(--orange);font-weight:700;}
+
+/* SCROLL TOP */
+.scr-top{position:fixed;bottom:18px;right:18px;width:43px;height:43px;background:var(--orange);color:#fff;border:none;border-radius:50%;font-size:1.1rem;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:800;box-shadow:var(--shadow-o);transition:all .2s;}
+.scr-top.on{display:flex;}
+.scr-top:hover{background:var(--orange-dark);}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+
+/* SETUP BANNER */
+.setup-b{background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.34);border-radius:var(--radius);padding:15px 19px;margin:60px 14px 0;font-size:.81rem;line-height:1.9;color:var(--text-muted);}
+.setup-b strong{color:var(--orange);}
+.setup-b code{background:rgba(0,0,0,.4);padding:2px 7px;border-radius:4px;font-size:.75rem;color:var(--blue-light);}
+
+@media(min-width:768px){
+  .nav-desktop{display:flex;}
+  .hbg{display:none;}
+  .pgrid{padding:20px;}
+  .auth-card{max-width:480px;}
+}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home')"><span class="ax">AXON</span><span class="fo">FORGE</span></a>
+  <div class="nav-desktop">
+    <button class="nav-lnk" onclick="showPage('market')">🛍 Marketplace</button>
+    <button class="nav-lnk" onclick="showPage('ecommerce')">📦 Commerce</button>
+    <button class="nav-lnk" onclick="showPage('telemedicine')">🏥 Medical</button>
+    <button class="nav-lnk" onclick="showPage('pickdrop')">🚁 Pick &amp; Drop</button>
+  </div>
+  <div class="nav-actions">
+    <div class="nav-badge-w">
+      <button class="btn-ico" onclick="showPage('cart')" title="Cart">🛒</button>
+      <span class="nav-badge" id="cartBadge">0</span>
+    </div>
+    <div class="nav-badge-w">
+      <button class="btn-ico" onclick="showPage('mychats')" title="Chats">💬</button>
+      <span class="nav-badge" id="chatBadge" style="background:var(--green);">!</span>
+    </div>
+    <button class="btn-cta" id="navAuthBtn" onclick="handleNavAuth()">Login</button>
+    <button class="hbg" id="hbg" onclick="toggleSB()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sb-overlay" id="sbo" onclick="closeSB()"></div>
+
+<!-- SIDEBAR -->
+<div class="sb" id="sb">
+  <div class="sb-head">
+    <div class="sb-logo"><span class="ax">AXON</span><span class="fo">FORGE</span></div>
+    <button class="sb-x" onclick="closeSB()">✕</button>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-sec">Navigate</div>
+    <button class="sb-item" onclick="nav('home')"><span class="ic">🏠</span>Home</button>
+    <button class="sb-item" onclick="nav('market')"><span class="ic">🛍</span>Marketplace</button>
+    <button class="sb-item" onclick="nav('ecommerce')"><span class="ic">📦</span>E-Commerce</button>
+    <button class="sb-item" onclick="nav('telemedicine')"><span class="ic">🏥</span>Telemedicine</button>
+    <button class="sb-item" onclick="nav('pickdrop')"><span class="ic">🚁</span>Pick &amp; Drop</button>
+    <div class="sb-div"></div>
+    <div class="sb-sec">My Account</div>
+    <div class="nav-badge-w" style="width:100%;">
+      <button class="sb-item" onclick="nav('cart')"><span class="ic">🛒</span>Cart<span class="bgs" id="cartBadgeSB" style="display:none;">0</span></button>
+    </div>
+    <button class="sb-item" onclick="nav('mychats')"><span class="ic">💬</span>My Chats</button>
+    <button class="sb-item" id="sbAuthBtn" onclick="handleNavAuth()"><span class="ic">👤</span><span id="sbAuthLbl">Login / Register</span></button>
+    <button class="sb-item" id="sbAdminBtn" style="display:none;" onclick="nav('admin')"><span class="ic">🛡</span>Admin Panel</button>
+  </div>
+  <div class="sb-user" id="sbUser" style="display:none;">
+    <div class="sb-uname" id="sbUName">—</div>
+    <div class="sb-urole" id="sbURole">—</div>
+  </div>
+</div>
+
+<!-- SETUP BANNER -->
+<div class="setup-b" id="setupBanner">
+  <strong>⚙️ Django Backend Setup — One time, 2 minutes</strong><br/>
+  1. Open terminal inside <code>axonforge_backend/</code> folder<br/>
+  2. Run: <code>pip install -r requirements.txt</code><br/>
+  3. Run: <code>python manage.py makemigrations api</code> then <code>python manage.py migrate</code><br/>
+  4. Run: <code>mkdir media</code><br/>
+  5. Run: <code>python manage.py runserver</code><br/>
+  6. Add your email to <code>ADMIN_EMAILS</code> in <code>axonforge/settings.py</code><br/>
+  <strong>Keep terminal open. Delete this banner after setup.</strong>
+</div>
+<!-- ═══ PAGE: HOME ═══ -->
+<div id="page-home" class="page active">
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-gb"></div><div class="hero-go"></div>
+  <div class="h-content">
+    <div class="h-ey">North West Cameroon · Autonomous Drone Delivery</div>
+    <h1 class="h-title"><span class="bl">AXON</span><span class="or">FORGE</span></h1>
+    <p class="h-tl">Engineer &nbsp;·&nbsp; Deliver &nbsp;·&nbsp; Innovate</p>
+    <p class="h-sub">The first autonomous drone delivery system built in Bamenda — connecting vendors, patients, and communities across the North West Region through a unified platform.</p>
+    <div class="h-ctas">
+      <button class="btn btn-o" onclick="showPage('market')">Explore Marketplace</button>
+      <button class="btn btn-oo" onclick="showPage('pickdrop')">🚁 Book Delivery</button>
+    </div>
+  </div>
+  <!-- Hero visual — fully responsive -->
+  <div class="h-vis">
+    <!-- All 3 vehicles in a row that wraps on mobile -->
+    <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:flex-end;width:100%;">
+
+      <!-- DRONE — Phase 2 -->
+      <div style="text-align:center;flex-shrink:0;">
+        <div class="drone-wrap">
+          <svg width="160" height="130" viewBox="0 0 280 200" fill="none">
+            <line x1="140" y1="100" x2="55" y2="55" stroke="#2563EB" stroke-width="3" stroke-linecap="round"/>
+            <line x1="140" y1="100" x2="225" y2="55" stroke="#2563EB" stroke-width="3" stroke-linecap="round"/>
+            <line x1="140" y1="100" x2="55" y2="145" stroke="#2563EB" stroke-width="3" stroke-linecap="round"/>
+            <line x1="140" y1="100" x2="225" y2="145" stroke="#2563EB" stroke-width="3" stroke-linecap="round"/>
+            <line x1="140" y1="100" x2="140" y2="25" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="55" cy="55" r="11" fill="#0D1C38" stroke="#2563EB" stroke-width="2"/>
+            <circle cx="225" cy="55" r="11" fill="#0D1C38" stroke="#2563EB" stroke-width="2"/>
+            <circle cx="55" cy="145" r="11" fill="#0D1C38" stroke="#2563EB" stroke-width="2"/>
+            <circle cx="225" cy="145" r="11" fill="#0D1C38" stroke="#2563EB" stroke-width="2"/>
+            <circle cx="140" cy="25" r="11" fill="#0D1C38" stroke="#F97316" stroke-width="2"/>
+            <g style="transform-origin:55px 55px;animation:dspin .28s linear infinite"><line x1="35" y1="55" x2="75" y2="55" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" opacity=".75"/><line x1="55" y1="35" x2="55" y2="75" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" opacity=".75"/></g>
+            <g style="transform-origin:225px 55px;animation:dspin .25s linear infinite reverse"><line x1="205" y1="55" x2="245" y2="55" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" opacity=".75"/><line x1="225" y1="35" x2="225" y2="75" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" opacity=".75"/></g>
+            <g style="transform-origin:55px 145px;animation:dspin .3s linear infinite"><line x1="35" y1="145" x2="75" y2="145" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" opacity=".75"/><line x1="55" y1="125" x2="55" y2="165" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" opacity=".75"/></g>
+            <g style="transform-origin:225px 145px;animation:dspin .27s linear infinite reverse"><line x1="205" y1="145" x2="245" y2="145" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" opacity=".75"/><line x1="225" y1="125" x2="225" y2="165" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" opacity=".75"/></g>
+            <g style="transform-origin:140px 25px;animation:dspin .26s linear infinite"><line x1="120" y1="25" x2="160" y2="25" stroke="#F97316" stroke-width="2.5" stroke-linecap="round" opacity=".75"/><line x1="140" y1="5" x2="140" y2="45" stroke="#F97316" stroke-width="2.5" stroke-linecap="round" opacity=".75"/></g>
+            <rect x="120" y="82" width="40" height="34" rx="7" fill="#0D1C38" stroke="#2563EB" stroke-width="1.5"/>
+            <rect x="127" y="88" width="26" height="20" rx="3" fill="#07101F"/>
+            <circle cx="140" cy="98" r="3.5" fill="#F97316" opacity=".9"/>
+            <rect x="127" y="116" width="26" height="18" rx="4" fill="#132444" stroke="#F97316" stroke-width="1.2"/>
+            <ellipse cx="140" cy="170" rx="30" ry="5" fill="#F97316" opacity=".06"/>
+            <style>@keyframes dspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style>
+          </svg>
+        </div>
+        <div style="display:inline-block;background:rgba(37,99,235,.15);border:1px solid var(--blue);border-radius:99px;padding:3px 12px;font-size:.62rem;font-family:'Orbitron',monospace;color:var(--blue-light);letter-spacing:.1em;">PHASE 2 · DRONE</div>
+      </div>
+
+      <!-- MOTORBIKE — Phase 1 -->
+      <div style="text-align:center;flex-shrink:0;">
+        <svg width="120" height="85" viewBox="0 0 160 110" fill="none" style="filter:drop-shadow(0 0 10px rgba(249,115,22,0.3));animation:flt 3.2s ease-in-out infinite;">
+          <circle cx="30" cy="80" r="22" stroke="#F97316" stroke-width="3" fill="#07101F"/>
+          <circle cx="30" cy="80" r="10" stroke="#F97316" stroke-width="2" fill="none" opacity=".5"/>
+          <circle cx="30" cy="80" r="3" fill="#F97316"/>
+          <circle cx="128" cy="80" r="22" stroke="#F97316" stroke-width="3" fill="#07101F"/>
+          <circle cx="128" cy="80" r="10" stroke="#F97316" stroke-width="2" fill="none" opacity=".5"/>
+          <circle cx="128" cy="80" r="3" fill="#F97316"/>
+          <line x1="30" y1="80" x2="72" y2="44" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+          <line x1="72" y1="44" x2="128" y2="80" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+          <line x1="72" y1="44" x2="95" y2="44" stroke="#F97316" stroke-width="3" stroke-linecap="round"/>
+          <line x1="95" y1="44" x2="128" y2="80" stroke="#60A5FA" stroke-width="2.5" stroke-linecap="round"/>
+          <rect x="60" y="50" width="42" height="22" rx="5" fill="#0D1C38" stroke="#F97316" stroke-width="1.5"/>
+          <line x1="95" y1="44" x2="108" y2="34" stroke="#60A5FA" stroke-width="3" stroke-linecap="round"/>
+          <line x1="103" y1="30" x2="113" y2="30" stroke="#60A5FA" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="80" cy="32" r="9" fill="#0D1C38" stroke="#F97316" stroke-width="2"/>
+          <line x1="80" y1="41" x2="80" y2="56" stroke="#F97316" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="80" y1="46" x2="95" y2="44" stroke="#F97316" stroke-width="2" stroke-linecap="round"/>
+          <line x1="80" y1="46" x2="68" y2="50" stroke="#F97316" stroke-width="2" stroke-linecap="round"/>
+          <rect x="44" y="46" width="20" height="16" rx="3" fill="#132444" stroke="#F97316" stroke-width="1.2"/>
+          <line x1="2" y1="60" x2="18" y2="60" stroke="#F97316" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+          <line x1="5" y1="68" x2="16" y2="68" stroke="#F97316" stroke-width="1" stroke-linecap="round" opacity=".25"/>
+        </svg>
+        <div style="display:inline-block;background:rgba(249,115,22,.15);border:1px solid var(--orange);border-radius:99px;padding:3px 12px;font-size:.62rem;font-family:'Orbitron',monospace;color:var(--orange);letter-spacing:.1em;margin-top:4px;">PHASE 1 · BIKE</div>
+      </div>
+
+      <!-- K-TRUCK — Phase 1 -->
+      <div style="text-align:center;flex-shrink:0;">
+        <svg width="140" height="85" viewBox="0 0 190 110" fill="none" style="filter:drop-shadow(0 0 10px rgba(249,115,22,0.25));animation:flt 4s ease-in-out infinite reverse;">
+          <circle cx="40" cy="85" r="18" stroke="#F97316" stroke-width="3" fill="#07101F"/>
+          <circle cx="40" cy="85" r="8" stroke="#F97316" stroke-width="1.5" fill="none" opacity=".5"/>
+          <circle cx="40" cy="85" r="3" fill="#F97316"/>
+          <circle cx="148" cy="85" r="18" stroke="#F97316" stroke-width="3" fill="#07101F"/>
+          <circle cx="148" cy="85" r="8" stroke="#F97316" stroke-width="1.5" fill="none" opacity=".5"/>
+          <circle cx="148" cy="85" r="3" fill="#F97316"/>
+          <rect x="18" y="45" width="152" height="40" rx="4" fill="#0D1C38" stroke="#F97316" stroke-width="2"/>
+          <rect x="130" y="28" width="40" height="38" rx="5" fill="#0D1C38" stroke="#60A5FA" stroke-width="2"/>
+          <rect x="136" y="33" width="28" height="18" rx="3" fill="#132444" stroke="#60A5FA" stroke-width="1.2" opacity=".8"/>
+          <circle cx="170" cy="57" r="4" fill="#F97316" opacity=".9"/>
+          <rect x="26" y="52" width="96" height="26" rx="3" fill="#132444" stroke="#2563EB" stroke-width="1"/>
+          <text x="74" y="69" font-family="monospace" font-size="9" font-weight="bold" fill="#60A5FA" text-anchor="middle" letter-spacing="1">AXONFORGE</text>
+          <line x1="100" y1="45" x2="100" y2="85" stroke="#2563EB" stroke-width="1" opacity=".4"/>
+          <line x1="2" y1="65" x2="14" y2="65" stroke="#F97316" stroke-width="1.5" stroke-linecap="round" opacity=".35"/>
+          <line x1="4" y1="73" x2="13" y2="73" stroke="#F97316" stroke-width="1" stroke-linecap="round" opacity=".2"/>
+        </svg>
+        <div style="display:inline-block;background:rgba(249,115,22,.15);border:1px solid var(--orange);border-radius:99px;padding:3px 12px;font-size:.62rem;font-family:'Orbitron',monospace;color:var(--orange);letter-spacing:.1em;margin-top:4px;">PHASE 1 · TRUCK</div>
+      </div>
+
+    </div>
+  </div><!-- end h-vis -->
+
+  <div class="h-stats">
+    <div class="hs"><div class="hs-v">3K+</div><div class="hs-l">Vendors</div></div>
+    <div class="hs"><div class="hs-v">80+</div><div class="hs-l">Hospitals</div></div>
+    <div class="hs"><div class="hs-v">NW</div><div class="hs-l">Region</div></div>
+  </div>
+</section>
+
+<section style="background:var(--surface);">
+  <!-- Caption above What We Do -->
+  <div style="text-align:center;margin-bottom:24px;padding:14px 20px;background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.2);border-radius:var(--radius-lg);">
+    <p style="font-size:.9rem;color:var(--text-muted);line-height:1.8;">
+      Starting with <span style="color:var(--orange);font-weight:700;">riders &amp; trucks</span> in Phase 1 &nbsp;·&nbsp; Scaling to <span style="color:var(--blue-light);font-weight:700;">autonomous drones</span> in Phase 2
+    </p>
+  </div>
+  <div class="tag rv">What We Do</div>
+  <h2 class="sec-title rv">Two Delivery<br/>Verticals.</h2>
+  <p class="sec-sub rv">One platform. One autonomous drone fleet. Two critical problems solved.</p>
+  <div class="vc-grid rv">
+    <div class="vc co">
+      <div class="vc-ic">📦</div>
+      <div class="vc-tt">AxonForge Commerce</div>
+      <p class="vc-ds">A hyperlocal e-commerce marketplace connecting vendors and customers across Bamenda — with drone delivery to GPS coordinates.</p>
+      <div class="vc-feats">
+        <div class="vc-f">Browse goods from 3,000+ local vendors</div>
+        <div class="vc-f">Order online — delivered by drone or rider</div>
+        <div class="vc-f">Escrow payment — your money is protected</div>
+        <div class="vc-f">Real-time chat with vendor &amp; team</div>
+      </div>
+      <div style="margin-top:18px;"><span class="badge bd-b">Active Now</span></div>
+    </div>
+    <div class="vc me">
+      <div class="vc-ic">🏥</div>
+      <div class="vc-tt">AxonForge Medical</div>
+      <p class="vc-ds">Telemedicine platform for the NW Region — consult licensed doctors, order OTC medication, emergency drone dispatch to your GPS.</p>
+      <div class="vc-feats">
+        <div class="vc-f">OTC drug marketplace (live now)</div>
+        <div class="vc-f">Video consultation — licensed doctors</div>
+        <div class="vc-f">Emergency drone dispatch in under 20 min</div>
+        <div class="vc-f">Encrypted patient health records</div>
+      </div>
+      <div style="margin-top:18px;"><span class="badge bd-o">Marketplace Live · Full Platform Soon</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="tag rv">The Process</div>
+  <h2 class="sec-title rv">How It Works.</h2>
+  <div class="steps rv">
+    <div class="s-item"><div class="s-line"><div class="s-num">01</div><div class="s-conn"></div></div><div class="s-body"><div class="s-tt">Place Your Order</div><p class="s-ds">Browse the marketplace and share your exact GPS location. No more vague directions — we know precisely where you are.</p></div></div>
+    <div class="s-item"><div class="s-line"><div class="s-num">02</div><div class="s-conn"></div></div><div class="s-body"><div class="s-tt">Confirm via Chat</div><p class="s-ds">A live chat opens between you, the vendor, and the AxonForge team. We confirm pickup, drop-off, and timing before dispatch.</p></div></div>
+    <div class="s-item"><div class="s-line"><div class="s-num">03</div><div class="s-conn"></div></div><div class="s-body"><div class="s-tt">Drone Dispatched</div><p class="s-ds">The AxonForge AF-P1 pentacopter takes off autonomously — navigating over traffic and terrain directly to your GPS coordinates.</p></div></div>
+    <div class="s-item"><div class="s-line"><div class="s-num">04</div></div><div class="s-body"><div class="s-tt">Delivered &amp; Confirmed</div><p class="s-ds">Package delivered. Payment released to vendor only after you confirm receipt. You can never lose money on our platform.</p></div></div>
+  </div>
+</section>
+
+<section style="background:var(--surface);">
+  <div class="tag rv">Service Area</div>
+  <h2 class="sec-title rv">Coverage Zones.</h2>
+  <div class="cov-map rv">
+    <div class="mp" style="top:35%;left:48%;"></div>
+    <div class="mp" style="top:55%;left:35%;animation-delay:.8s;"></div>
+    <div class="mp" style="top:27%;left:59%;animation-delay:1.5s;"></div>
+    <div class="mp" style="top:63%;left:61%;animation-delay:2.1s;"></div>
+    <div style="text-align:center;z-index:1;">
+      <div class="cov-lbl">North West Region, Cameroon</div>
+      <div class="cov-sub">Phase 1 coverage — Expanding soon</div>
+    </div>
+  </div>
+  <div class="z-grid rv">
+    <div class="z-chip"><div class="z-name">Bamenda City</div><div class="z-st act">● Active</div></div>
+    <div class="z-chip"><div class="z-name">Nkwen</div><div class="z-st act">● Active</div></div>
+    <div class="z-chip"><div class="z-name">Ntarikon</div><div class="z-st act">● Active</div></div>
+    <div class="z-chip"><div class="z-name">Mile 4 / 8</div><div class="z-st act">● Active</div></div>
+    <div class="z-chip"><div class="z-name">Bafut</div><div class="z-st soon">◌ Coming Soon</div></div>
+    <div class="z-chip"><div class="z-name">Bali</div><div class="z-st soon">◌ Coming Soon</div></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="tag rv">Who We Are</div>
+  <h2 class="sec-title rv">Built in Bamenda.</h2>
+  <p class="sec-sub rv">AxonForge is a student-engineers-led autonomous drone startup from NAHPI, University of Bamenda.</p>
+  <div class="card rv" style="padding:22px;">
+    <p style="font-size:.89rem;color:var(--text-muted);line-height:1.8;margin-bottom:16px;">Our pentacopter runs <strong style="color:var(--text);">Arduino Mega 2560 + MultiWii</strong> for flight control, <strong style="color:var(--text);">Raspberry Pi Zero W</strong> for autonomous GPS intelligence, and <strong style="color:var(--text);">ESP32</strong> for WiFi telemetry. Sensors: 5× ultrasonic, NEO-6M GPS, MPU6050, barometer, rain, temperature. Designed and built by engineering students across 9 divisions.</p>
+    <div class="tm-badges">
+      <div class="tm-b">🎓 <span>NAHPI · UBa</span></div>
+      <div class="tm-b">👥 <span>Student-Engineers-Led</span></div>
+      <div class="tm-b">🚁 <span>Pentacopter Design</span></div>
+      <div class="tm-b">📡 <span>GPS Autonomous</span></div>
+      <div class="tm-b">🏥 <span>Medical Delivery</span></div>
+      <div class="tm-b">🇨🇲 <span>Built in Bamenda</span></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--surface);">
+  <div class="tag rv">Common Questions</div>
+  <h2 class="sec-title rv">FAQ</h2>
+  <div class="faq-list rv">
+    <div class="fi-item"><div class="fi-q" onclick="toggleFaq(this)">How does GPS delivery work?<div class="fi-arr">+</div></div><div class="fi-a"><div class="fi-ai">When you tap "Share My GPS", your phone sends exact lat/lng coordinates. The drone navigates to those coordinates — accurate to within a few metres. No more "near the big mango tree".</div></div></div>
+    <div class="fi-item"><div class="fi-q" onclick="toggleFaq(this)">How does escrow protect my payment?<div class="fi-arr">+</div></div><div class="fi-a"><div class="fi-ai">Your payment goes to AxonForge first — not the vendor. Once you confirm receipt, we release the money to the vendor. If delivery fails, you get a full refund. You can never lose money to a dishonest vendor.</div></div></div>
+    <div class="fi-item"><div class="fi-q" onclick="toggleFaq(this)">Minimum order value for drone delivery?<div class="fi-arr">+</div></div><div class="fi-a"><div class="fi-ai">Drone delivery is available for orders valued at 3,000 XAF and above. Standard rider delivery is available for smaller items.</div></div></div>
+    <div class="fi-item"><div class="fi-q" onclick="toggleFaq(this)">How do I sell my products on AxonForge?<div class="fi-arr">+</div></div><div class="fi-a"><div class="fi-ai">Register as a vendor, submit your ID for verification, and our admin team confirms your account. Once active, list your products and we handle delivery logistics. A 3% commission applies per sale.</div></div></div>
+    <div class="fi-item"><div class="fi-q" onclick="toggleFaq(this)">What are the operating hours?<div class="fi-arr">+</div></div><div class="fi-a"><div class="fi-ai">AxonForge operates during defined daily hours. Orders outside hours are queued. 24/7 operations planned for a future version once the full drone fleet is deployed.</div></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-grid">
+    <div>
+      <div class="ft-logo"><span class="ax">AXON</span><span class="fo">FORGE</span></div>
+      <p class="ft-tg">Autonomous drone delivery &amp; marketplace — North West Region, Cameroon.</p>
+      <p style="font-size:.71rem;color:var(--orange);font-style:italic;">Engineer · Deliver · Innovate</p>
+    </div>
+    <div style="margin-top:22px;">
+      <div class="ft-col-tt">Platform</div>
+      <a class="ft-lnk" onclick="showPage('market')">Marketplace</a>
+      <a class="ft-lnk" onclick="showPage('ecommerce')">E-Commerce</a>
+      <a class="ft-lnk" onclick="showPage('telemedicine')">Telemedicine</a>
+      <a class="ft-lnk" onclick="showPage('pickdrop')">Pick &amp; Drop</a>
+      <a class="ft-lnk" onclick="showPage('cart')">My Cart</a>
+    </div>
+    <div style="margin-top:22px;">
+      <div class="ft-col-tt">Company</div>
+      <a class="ft-lnk" href="#about">About AxonForge</a>
+      <a class="ft-lnk" onclick="showPage('auth')">Vendor Portal</a>
+      <div class="ft-col-tt" style="margin-top:18px;">Contact</div>
+      <p style="font-size:.81rem;color:var(--text-muted);line-height:1.9;">Bamenda, NW Cameroon<br/><a href="mailto:hello@axonforge.cm" style="color:var(--orange);text-decoration:none;">hello@axonforge.cm</a></p>
+    </div>
+  </div>
+  <div class="ft-bot"><span>© 2026 AxonForge. All rights reserved.</span><span class="hl">Built in Bamenda 🇨🇲 · NAHPI · UBa</span></div>
+</footer>
+</div>
+
+<!-- ═══ PAGE: MARKET ═══ -->
+<div id="page-market" class="page">
+  <div class="pg-hd"><h1>🛍 General <span class="o">Marketplace</span></h1><p>All products — commerce + medical OTC in one place</p></div>
+  <div class="tbar">
+    <button class="tbtn on" onclick="switchMktTab(this,'all')">All Products</button>
+    <button class="tbtn" onclick="switchMktTab(this,'commerce')">📦 Commerce</button>
+    <button class="tbtn" onclick="switchMktTab(this,'medical')">💊 Medical OTC</button>
+  </div>
+  <div class="mkt-ctrl">
+    <div class="srch-wrap"><span class="srch-ico">🔍</span><input class="srch" type="text" placeholder="Search products, vendors..." oninput="filterMkt()" id="mktSrch"/></div>
+    <select class="flt-sel" onchange="filterMkt()" id="mktCat"><option value="">All Categories</option><option>Food</option><option>Electronics</option><option>Clothing</option><option>Medicine</option><option>Household</option><option>Other</option></select>
+  </div>
+  <div id="mktGrid" class="pgrid"></div>
+  <div id="mktEmpty" class="empty" style="display:none;"><div class="empty-ic">📦</div><div class="empty-tt">No Products Found</div><p>Try a different search or category.</p></div>
+</div>
+
+<!-- ═══ PAGE: ECOMMERCE ═══ -->
+<div id="page-ecommerce" class="page">
+  <div class="pg-hd" style="border-left:4px solid var(--blue);"><div class="tag" style="color:var(--blue-light);">Commerce Platform</div><h1>📦 <span style="color:var(--blue-light);">E-Commerce</span></h1><p>Vendor marketplace — order goods, get drone delivery to your GPS</p></div>
+  <div class="mkt-ctrl">
+    <div class="srch-wrap"><span class="srch-ico">🔍</span><input class="srch" type="text" placeholder="Search products or vendors..." oninput="filterEcom()" id="ecomSrch"/></div>
+    <select class="flt-sel" onchange="filterEcom()" id="ecomCat"><option value="">All Categories</option><option>Food</option><option>Electronics</option><option>Clothing</option><option>Household</option><option>Other</option></select>
+  </div>
+  <div id="ecomGrid" class="pgrid"></div>
+  <div id="ecomEmpty" class="empty" style="display:none;"><div class="empty-ic">🏪</div><div class="empty-tt">No Products Yet</div><p>Be the first vendor to list goods.</p><br/><button class="btn btn-o btn-sm" onclick="showPage('auth')">Register as Vendor</button></div>
+</div>
+
+<!-- ═══ PAGE: TELEMEDICINE ═══ -->
+<div id="page-telemedicine" class="page">
+  <div class="pg-hd" style="border-left:4px solid var(--orange);"><div class="tag">Medical Platform</div><h1>🏥 <span class="o">Telemedicine</span></h1><p>OTC marketplace active · Full telemedicine coming soon</p></div>
+  <div class="tbar">
+    <button class="tbtn on" onclick="switchTeleTab(this,'tele-mkt')">💊 OTC Marketplace</button>
+    <button class="tbtn" onclick="switchTeleTab(this,'tele-consult')">👨‍⚕️ Consultation</button>
+    <button class="tbtn" onclick="switchTeleTab(this,'tele-emrg')">🆘 Emergency</button>
+    <button class="tbtn" onclick="switchTeleTab(this,'tele-rec')">📋 Records</button>
+  </div>
+  <div id="tele-mkt" class="tpane on">
+    <div class="mkt-ctrl"><div class="srch-wrap"><span class="srch-ico">🔍</span><input class="srch" type="text" placeholder="Search OTC medications..." oninput="filterMed()" id="medSrch"/></div></div>
+    <div style="background:rgba(16,185,129,.05);border-bottom:1px solid rgba(16,185,129,.18);padding:9px 15px;font-size:.77rem;color:var(--green);">✅ Only legally authorized OTC drugs — all listings by licensed pharmacies</div>
+    <div id="medGrid" class="pgrid"></div>
+    <div id="medEmpty" class="empty" style="display:none;"><div class="empty-ic">💊</div><div class="empty-tt">No Medical Products Yet</div><p>Licensed pharmacies will list OTC medications here.</p></div>
+  </div>
+  <div id="tele-consult" class="tpane">
+    <div style="background:rgba(16,185,129,.06);border-bottom:1px solid rgba(16,185,129,.18);padding:10px 16px;font-size:.77rem;color:var(--green);">💬 Text consultation with medical personnel is live now</div>
+    <div style="padding:14px;">
+      <div class="card" style="margin-bottom:14px;">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+          <div><div style="font-family:'Orbitron',monospace;font-size:.82rem;color:var(--orange);">Text Consultation</div><div style="font-size:.75rem;color:var(--text-muted);margin-top:2px;">Chat with a licensed doctor, nurse, or pharmacist</div></div>
+          <span class="badge bd-g">Live</span>
+        </div>
+        <div style="padding:16px;">
+          <div class="fg"><label class="fl">Select Medical Personnel Type</label><select class="fi" id="teleType"><option value="doctor">👨‍⚕️ Doctor</option><option value="nurse">👩‍⚕️ Nurse</option><option value="pharmacist">💊 Pharmacist</option></select></div>
+          <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" id="teleNm" placeholder="Your full name"/></div>
+          <div class="fg"><label class="fl">Describe Your Symptoms / Question</label><textarea class="fi" id="teleMsg" placeholder="Describe what you are experiencing or what you need help with..."></textarea></div>
+          <button class="btn btn-o btn-blk" onclick="startMedChat()">💬 Start Text Consultation</button>
+        </div>
+      </div>
+      <div class="card" style="padding:22px;text-align:center;">
+        <div style="font-size:2.2rem;margin-bottom:10px;">📹</div>
+        <div style="font-family:'Orbitron',monospace;font-size:.86rem;color:var(--orange);margin-bottom:7px;">Video Consultation</div>
+        <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:13px;">Face-to-face video call with licensed doctors — coming next phase.</p>
+        <span class="badge bd-o">Coming Soon</span>
+      </div>
+    </div>
+  </div>
+  <div id="tele-emrg" class="tpane"><div class="cs-wrap"><div class="cs-icon">🆘</div><h3 class="cs-tt">Emergency Button</h3><p class="cs-sub">Press to trigger auto-dispatch from the nearest Drone Hop based on your GPS location. For patients with chronic conditions.</p><span class="badge bd-o">Coming Soon</span></div></div>
+  <div id="tele-rec" class="tpane"><div class="cs-wrap"><div class="cs-icon">📋</div><h3 class="cs-tt">Patient Health Records</h3><p class="cs-sub">Securely store your health profile and medical history. Encrypted, accessible only with your permission.</p><span class="badge bd-o">Coming Soon</span></div></div>
+</div>
+
+<!-- ═══ PAGE: CART ═══ -->
+<div id="page-cart" class="page">
+  <div class="pg-hd"><h1>🛒 Your <span class="o">Cart</span></h1><p>Review items — payment held in escrow by AxonForge</p></div>
+  <div id="cartItems" class="cart-items"></div>
+  <div id="cartSum" class="c-sum" style="display:none;">
+    <div class="c-row"><span>Subtotal</span><span id="cSubtotal">—</span></div>
+    <div class="c-row"><span>Drone Delivery Fee</span><span>800 XAF</span></div>
+    <div class="c-row"><span>Commission (3%)</span><span id="cComm">—</span></div>
+    <div class="c-tot"><span>Total</span><span id="cTotal">—</span></div>
+    <div class="escrow-note">🔒 <strong>Escrow Protection:</strong> Payment goes to AxonForge first. Released to vendor only after you confirm delivery. Full refund if delivery fails.</div>
+    <div class="fg"><label class="fl">Your Full Name</label><input class="fi" type="text" id="coName" placeholder="Full name"/></div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" id="coPhone" placeholder="+237 6XX XXX XXX"/></div>
+    <div class="fg"><label class="fl">Delivery Address / Landmark</label><input class="fi" type="text" id="coAddr" placeholder="Describe your exact location"/></div>
+    <button class="btn-gps" onclick="getGPS('co')">📍 Share My GPS for Delivery</button>
+    <div class="gps-res" id="coGPS"></div>
+    <div class="fg" style="margin-top:13px;"><label class="fl">Delivery Method</label>
+      <select class="fi" id="coMethod">
+        <option value="drone">🚁 Drone Delivery (GPS required · min 3,000 XAF)</option>
+        <option value="rider">🏍 Standard Rider Delivery</option>
+        <option value="pickup">🏪 Pickup from Vendor</option>
+      </select>
+    </div>
+    <div style="margin-top:14px;">
+      <button class="btn btn-o btn-blk" id="checkoutBtn" onclick="checkout()">Place Order →</button>
+      <button class="btn btn-dng btn-blk" style="margin-top:9px;" onclick="clearCart()">Clear Cart</button>
+    </div>
+  </div>
+  <div id="cartEmpty" class="empty"><div class="empty-ic">🛒</div><div class="empty-tt">Cart is Empty</div><p>Browse the marketplace and add products.</p><br/><button class="btn btn-o btn-sm" onclick="showPage('market')">Browse Marketplace</button></div>
+</div>
+
+<!-- ═══ PAGE: PICK & DROP ═══ -->
+<div id="page-pickdrop" class="page">
+  <div class="pg-hd"><h1>🚁 Pick &amp; <span class="o">Drop</span></h1><p>Send anything anywhere — drone picks up and drops to exact GPS coordinates</p></div>
+  <div class="pd-wrap">
+    <div class="pd-sec">
+      <div class="pd-ttl">Item Description</div>
+      <div class="fg"><label class="fl">Describe What You Are Sending</label><textarea class="fi" id="pdDesc" placeholder="What is the item? Weight, fragility, special handling? Suspicious items will not be dispatched."></textarea></div>
+      <div class="fg2">
+        <div class="fg"><label class="fl">Estimated Value (XAF)</label><input class="fi" type="number" id="pdVal" placeholder="e.g. 5000" min="3000"/></div>
+        <div class="fg"><label class="fl">Item Type</label><select class="fi" id="pdType"><option value="commerce">📦 Commerce / General</option><option value="medical">💊 Medical Supply</option><option value="document">📄 Document</option><option value="food">🍱 Food</option></select></div>
+      </div>
+      <p style="font-size:.72rem;color:var(--text-muted);">Minimum value 3,000 XAF for drone delivery</p>
+    </div>
+    <div class="pd-sec">
+      <div class="pd-ttl">Pickup Location</div>
+      <div class="fg"><label class="fl">Address / Landmark</label><input class="fi" type="text" id="pdPickTxt" placeholder="e.g. Nkwen — Opposite Total filling station"/></div>
+      <button class="btn-gps" onclick="getGPS('pdPick')">📍 Share Pickup GPS</button>
+      <div class="gps-res" id="pdPickGPS"></div>
+      <div class="c2" style="margin-top:13px;">
+        <div class="fg"><label class="fl">Contact Name</label><input class="fi" type="text" id="pdPickName" placeholder="Person sending"/></div>
+        <div class="fg"><label class="fl">Contact Phone</label><input class="fi" type="tel" id="pdPickPhone" placeholder="+237 6XX XXX XXX"/></div>
+      </div>
+    </div>
+    <div class="pd-sec">
+      <div class="pd-ttl">Drop-off Location</div>
+      <div class="fg"><label class="fl">Address / Landmark</label><input class="fi" type="text" id="pdDropTxt" placeholder="e.g. Mankon — Behind the Bishop's residence"/></div>
+      <button class="btn-gps" onclick="getGPS('pdDrop')">📍 Share Drop-off GPS</button>
+      <div class="gps-res" id="pdDropGPS"></div>
+      <div class="c2" style="margin-top:13px;">
+        <div class="fg"><label class="fl">Receiver Name</label><input class="fi" type="text" id="pdDropName" placeholder="Person receiving"/></div>
+        <div class="fg"><label class="fl">Receiver Phone</label><input class="fi" type="tel" id="pdDropPhone" placeholder="+237 6XX XXX XXX"/></div>
+      </div>
+    </div>
+    <div class="pd-sec">
+      <div class="pd-ttl">Your Information</div>
+      <div class="fg2">
+        <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" id="pdYName" placeholder="Your full name"/></div>
+        <div class="fg"><label class="fl">Your Phone</label><input class="fi" type="tel" id="pdYPhone" placeholder="+237 6XX XXX XXX"/></div>
+      </div>
+    </div>
+    <div class="alert al-info on" style="display:flex;align-items:flex-start;gap:8px;"><span>🔒</span><span>Security: All items subject to screening. Contraband or dangerous goods will not be dispatched.</span></div>
+    <button class="btn btn-o btn-blk" id="pdBtn" onclick="submitPD()" style="margin-top:8px;">🚁 Submit Pick &amp; Drop Order</button>
+  </div>
+</div>
+
+<!-- ═══ PAGE: AUTH ═══ -->
+<div id="page-auth" class="page">
+  <div class="auth-pg">
+    <div style="text-align:center;margin-bottom:26px;">
+      <div style="font-family:'Orbitron',monospace;font-weight:900;font-size:1.7rem;"><span style="color:var(--blue-light);">AXON</span><span style="color:var(--orange);">FORGE</span></div>
+      <p style="font-size:.75rem;color:var(--text-muted);margin-top:5px;letter-spacing:.14em;text-transform:uppercase;">Engineer · Deliver · Innovate</p>
+    </div>
+    <div class="auth-card">
+      <div class="auth-hd"><h2>Welcome to <span class="o">AxonForge</span></h2><p>Login to your account or create a new one</p></div>
+      <div class="auth-bd">
+        <div class="auth-tabs">
+          <button class="at-btn on" onclick="switchATab('login')">Login</button>
+          <button class="at-btn" onclick="switchATab('reg')">Register</button>
+        </div>
+        <!-- LOGIN -->
+        <div id="authLogin" class="tpane on">
+          <div class="fg"><label class="fl">Account Type</label><select class="fi" id="loginType"><option value="customer">👤 Customer</option><option value="vendor">🏪 Vendor / Business</option><option value="medical">⚕️ Medical Personnel</option><option value="patient">🏥 Patient</option></select></div>
+          <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" id="loginEmail" placeholder="your@email.com"/></div>
+          <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="loginPass" placeholder="Your password"/></div>
+          <div class="alert al-err" id="loginErr">Incorrect email or password.</div>
+          <button class="btn btn-o btn-blk" id="loginBtn" onclick="doLogin()">Login →</button>
+          <p style="text-align:center;margin-top:13px;font-size:.79rem;color:var(--text-muted);">No account? <span style="color:var(--orange);cursor:pointer;" onclick="switchATab('reg')">Register here</span></p>
+        </div>
+        <!-- REGISTER -->
+        <div id="authReg" class="tpane">
+          <div class="type-sel">
+            <span class="type-lbl">I want to register as:</span>
+            <div class="type-grid">
+              <div class="type-opt on" data-type="customer" onclick="selType(this)"><div class="to-ic">👤</div><div class="to-nm">Customer</div><div class="to-ds">Buy &amp; book deliveries</div></div>
+              <div class="type-opt" data-type="vendor" onclick="selType(this)"><div class="to-ic">🏪</div><div class="to-nm">Vendor</div><div class="to-ds">Sell on platform</div></div>
+              <div class="type-opt" data-type="medical" onclick="selType(this)"><div class="to-ic">⚕️</div><div class="to-nm">Medical</div><div class="to-ds">Doctor / Nurse / Pharmacist</div></div>
+              <div class="type-opt" data-type="patient" onclick="selType(this)"><div class="to-ic">🏥</div><div class="to-nm">Patient</div><div class="to-ds">Telemedicine access</div></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Full Name</label><input class="fi" type="text" id="regName" placeholder="Your full name"/></div>
+          <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" id="regPhone" placeholder="+237 6XX XXX XXX"/></div>
+          <!-- Business fields -->
+          <div id="bizFields" style="display:none;">
+            <div class="fg"><label class="fl">Business / Establishment Name</label><input class="fi" type="text" id="regBizName" placeholder="e.g. Nkwen Fresh Foods"/></div>
+            <div class="fg"><label class="fl">Zone / Location</label><select class="fi" id="regZone"><option>Bamenda City</option><option>Nkwen</option><option>Ntarikon</option><option>Mile 4</option><option>Mile 8</option><option>Mankon</option><option>Up Station</option><option>Commercial Avenue</option><option>Other</option></select></div>
+            <div id="medRoleField" style="display:none;" class="fg"><label class="fl">Medical Role</label><select class="fi" id="regMedRole"><option value="doctor">Doctor</option><option value="nurse">Nurse</option><option value="pharmacist">Pharmacist</option></select></div>
+            <div class="fg"><label class="fl">Business Logo</label><div class="img-box" onclick="document.getElementById('logoUp').click()"><div class="img-ico">🏢</div><p class="img-lbl">Tap to upload business logo</p><input type="file" id="logoUp" accept="image/*" onchange="prevImg(this,'logoPrev')"/><img id="logoPrev" class="img-prev" style="display:none;"/></div></div>
+            <div class="fg"><label class="fl">National ID Card (front &amp; back — within 40 days)</label><p style="font-size:.73rem;color:var(--text-muted);margin-bottom:9px;">Admin verifies and confirms your account. You can start listing immediately.</p>
+              <div class="id-grid">
+                <div class="id-box" onclick="document.getElementById('idFront').click()"><div class="img-ico">📄</div><div class="id-lbl">Front of ID</div><input type="file" id="idFront" accept="image/*" onchange="prevImg(this,'idFP')"/><img id="idFP" class="id-thumb" style="display:none;"/></div>
+                <div class="id-box" onclick="document.getElementById('idBack').click()"><div class="img-ico">📄</div><div class="id-lbl">Back of ID</div><input type="file" id="idBack" accept="image/*" onchange="prevImg(this,'idBP')"/><img id="idBP" class="id-thumb" style="display:none;"/></div>
+              </div>
+            </div>
+          </div>
+          <!-- Profile picture (all) -->
+          <div class="fg"><label class="fl">Profile Picture</label><div class="img-box" onclick="document.getElementById('profUp').click()"><div class="img-ico">👤</div><p class="img-lbl">Tap to upload profile picture</p><input type="file" id="profUp" accept="image/*" onchange="prevImg(this,'profPrev')"/><img id="profPrev" class="img-prev" style="display:none;"/></div></div>
+          <!-- Patient fields -->
+          <div id="patFields" style="display:none;"><div class="fg"><label class="fl">Known Health Conditions (optional)</label><input class="fi" type="text" id="regCond" placeholder="e.g. Diabetes, Asthma..."/><p style="font-size:.71rem;color:var(--text-muted);margin-top:4px;">Used for emergency auto-dispatch. Stored securely.</p></div></div>
+          <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" id="regEmail" placeholder="your@email.com"/></div>
+          <div class="fg"><label class="fl">Password (min 6 chars)</label><input class="fi" type="password" id="regPass" placeholder="Create a strong password"/></div>
+          <div class="alert al-warn" id="verNote" style="display:none;">⏳ Vendor/Medical accounts are active for 40 days pending ID verification and admin confirmation.</div>
+          <div class="alert al-err" id="regErr">Please fill in all required fields.</div>
+          <div class="alert al-ok" id="regOk">Account created! Verify your email then log in.</div>
+          <button class="btn btn-o btn-blk" id="regBtn" onclick="doReg()">Create Account →</button>
+          <p style="text-align:center;margin-top:13px;font-size:.79rem;color:var(--text-muted);">Have an account? <span style="color:var(--orange);cursor:pointer;" onclick="switchATab('login')">Login here</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: VENDOR DASHBOARD ═══ -->
+<div id="page-vendor-dash" class="page">
+  <div class="dash-layout">
+    <div class="dash-sb">
+      <div style="padding:16px 0;">
+        <div class="dub-card"><div class="av-init" id="vdAv" style="margin-bottom:8px;">V</div><div class="dub-name" id="vdName">Vendor</div><div class="dub-role">🏪 Vendor Account</div></div>
+        <button class="dn-item on" onclick="switchDT('vd-prods')">📦 My Products</button>
+        <button class="dn-item" onclick="switchDT('vd-orders')">📋 Orders</button>
+        <button class="dn-item" onclick="switchDT('vd-chats')">💬 Chats</button>
+        <button class="dn-item" onclick="switchDT('vd-profile')">👤 Profile</button>
+        <div style="padding:0 12px;margin-top:18px;"><button class="btn btn-dng btn-blk btn-sm" onclick="doLogout()">Logout</button></div>
+      </div>
+    </div>
+    <div class="dash-main">
+      <div id="vd-prods" class="tpane on dc">
+        <div class="dh"><div class="dt">My <span class="o">Products</span></div><div id="vdStatBadge"></div></div>
+        <div class="stats-g"><div class="s-card"><div class="s-val" id="vdNProds">0</div><div class="s-lbl">Listed</div></div><div class="s-card"><div class="s-val" id="vdNOrds">0</div><div class="s-lbl">Orders</div></div><div class="s-card"><div class="s-val" id="vdZone">—</div><div class="s-lbl">Zone</div></div></div>
+        <div class="pm-form">
+          <div class="pm-ttl">+ Add New Product</div>
+          <div class="fg"><label class="fl">Product Image (optional)</label><div class="img-box" onclick="document.getElementById('pImgUp').click()"><div class="img-ico">📸</div><p class="img-lbl">Tap to upload product photo</p><input type="file" id="pImgUp" accept="image/*" onchange="prevImg(this,'pImgPrev')"/><img id="pImgPrev" class="img-prev" style="display:none;"/></div></div>
+          <div style="margin-bottom:13px;"><label class="fl">Or pick an icon</label><div class="em-pk" id="emPk"><div class="em-opt on" data-em="📦" onclick="selEm(this)">📦</div><div class="em-opt" data-em="🍎" onclick="selEm(this)">🍎</div><div class="em-opt" data-em="🥩" onclick="selEm(this)">🥩</div><div class="em-opt" data-em="🌽" onclick="selEm(this)">🌽</div><div class="em-opt" data-em="🍞" onclick="selEm(this)">🍞</div><div class="em-opt" data-em="👕" onclick="selEm(this)">👕</div><div class="em-opt" data-em="📱" onclick="selEm(this)">📱</div><div class="em-opt" data-em="🔧" onclick="selEm(this)">🔧</div><div class="em-opt" data-em="🧴" onclick="selEm(this)">🧴</div><div class="em-opt" data-em="🎁" onclick="selEm(this)">🎁</div><div class="em-opt" data-em="🏠" onclick="selEm(this)">🏠</div><div class="em-opt" data-em="📚" onclick="selEm(this)">📚</div></div></div>
+          <div class="fg2"><div class="fg"><label class="fl">Product Name</label><input class="fi" type="text" id="pName" placeholder="e.g. Fresh Tomatoes 1kg"/></div><div class="fg"><label class="fl">Category</label><select class="fi" id="pCat"><option>Food</option><option>Electronics</option><option>Clothing</option><option>Household</option><option>Other</option></select></div></div>
+          <div class="fg"><label class="fl">Description</label><input class="fi" type="text" id="pDesc" placeholder="Short product description"/></div>
+          <div class="fg2"><div class="fg"><label class="fl">Price (XAF)</label><input class="fi" type="number" id="pPrice" placeholder="e.g. 1500" min="100"/></div><div class="fg"><label class="fl">Stock</label><input class="fi" type="number" id="pStock" placeholder="e.g. 20" min="1"/></div></div>
+          <div class="alert al-err" id="prodErr">Please fill in all product fields.</div>
+          <button class="btn btn-b btn-blk" id="addProdBtn" onclick="addProd()">+ List This Product</button>
+        </div>
+        <div style="font-family:'Orbitron',monospace;font-size:.86rem;margin-bottom:13px;">Your <span style="color:var(--orange);">Products</span></div>
+        <div id="vdProdList"></div>
+        <div id="vdNoProd" style="text-align:center;padding:22px;color:var(--text-muted);font-size:.84rem;">No products listed yet.</div>
+      </div>
+      <div id="vd-orders" class="tpane dc"><div class="dt">Customer <span class="o">Orders</span></div><div id="vdOrders" style="margin-top:18px;"></div></div>
+      <div id="vd-chats" class="tpane dc"><div class="dt">Customer <span class="o">Chats</span></div><div id="vdChats" class="bc-list" style="padding:0;margin-top:18px;"></div></div>
+      <div id="vd-profile" class="tpane dc"><div class="dt">My <span class="o">Profile</span></div><div class="card" style="margin-top:18px;padding:22px;"><div id="vdProf" style="color:var(--text-muted);font-size:.84rem;">Loading...</div></div><button class="btn btn-dng btn-blk" style="margin-top:18px;" onclick="doLogout()">Logout</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: MEDICAL DASHBOARD ═══ -->
+<div id="page-medical-dash" class="page">
+  <div class="dash-layout">
+    <div class="dash-sb">
+      <div style="padding:16px 0;">
+        <div class="dub-card"><div class="av-init" id="mdAv">M</div><div class="dub-name" id="mdName">Medical</div><div class="dub-role" id="mdRoleLbl">⚕️ Medical Personnel</div></div>
+        <button class="dn-item on" onclick="switchDT('md-prods')">💊 OTC Listings</button>
+        <button class="dn-item" onclick="switchDT('md-orders')">📋 Orders</button>
+        <button class="dn-item" onclick="switchDT('md-profile')">👤 Profile</button>
+        <div style="padding:0 12px;margin-top:18px;"><button class="btn btn-dng btn-blk btn-sm" onclick="doLogout()">Logout</button></div>
+      </div>
+    </div>
+    <div class="dash-main">
+      <div id="md-prods" class="tpane on dc">
+        <div class="dh"><div class="dt">OTC <span class="o">Listings</span></div></div>
+        <div class="stats-g"><div class="s-card"><div class="s-val" id="mdNProds">0</div><div class="s-lbl">Listed</div></div><div class="s-card"><div class="s-val" id="mdNOrds">0</div><div class="s-lbl">Orders</div></div><div class="s-card"><div class="s-val" id="mdStatus">—</div><div class="s-lbl">Status</div></div></div>
+        <div class="pm-form">
+          <div class="pm-ttl">+ Add OTC Medication</div>
+          <div class="fg"><label class="fl">Medicine Name</label><input class="fi" type="text" id="mpName" placeholder="e.g. Paracetamol 500mg x10"/></div>
+          <div class="fg"><label class="fl">Description / Dosage</label><input class="fi" type="text" id="mpDesc" placeholder="Dosage, usage, indication"/></div>
+          <div class="fg2"><div class="fg"><label class="fl">Price (XAF)</label><input class="fi" type="number" id="mpPrice" placeholder="e.g. 500" min="50"/></div><div class="fg"><label class="fl">Stock</label><input class="fi" type="number" id="mpStock" placeholder="e.g. 50" min="1"/></div></div>
+          <div class="alert al-info on" style="font-size:.77rem;">⚕️ Only OTC and legally authorized medications. Prescription drugs not permitted.</div>
+          <div class="alert al-err" id="mpErr">Please fill in all fields.</div>
+          <button class="btn btn-o btn-blk" id="addMpBtn" onclick="addMedProd()">+ List Medication</button>
+        </div>
+        <div id="mdProdList"></div>
+      </div>
+      <div id="md-orders" class="tpane dc"><div class="dt">Patient <span class="o">Orders</span></div><div id="mdOrders" style="margin-top:18px;"></div></div>
+      <div id="md-profile" class="tpane dc"><div class="dt">My <span class="o">Profile</span></div><div class="card" style="margin-top:18px;padding:22px;"><div id="mdProf" style="color:var(--text-muted);font-size:.84rem;">Loading...</div></div><button class="btn btn-dng btn-blk" style="margin-top:18px;" onclick="doLogout()">Logout</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: CUSTOMER DASHBOARD ═══ -->
+<div id="page-customer-dash" class="page">
+  <div class="dash-layout">
+    <div class="dash-sb">
+      <div style="padding:16px 0;">
+        <div class="dub-card"><div class="av-init" id="cdAv">C</div><div class="dub-name" id="cdName">Customer</div><div class="dub-role">👤 Customer Account</div></div>
+        <button class="dn-item on" onclick="switchDT('cd-orders')">📋 My Orders</button>
+        <button class="dn-item" onclick="switchDT('cd-chats')">💬 My Chats</button>
+        <button class="dn-item" onclick="switchDT('cd-profile')">👤 Profile</button>
+        <div style="padding:0 12px;margin-top:18px;"><button class="btn btn-o btn-blk btn-sm" onclick="showPage('market')">🛍 Shop Now</button><button class="btn btn-dng btn-blk btn-sm" style="margin-top:7px;" onclick="doLogout()">Logout</button></div>
+      </div>
+    </div>
+    <div class="dash-main">
+      <div id="cd-orders" class="tpane on dc"><div class="dt">My <span class="o">Orders</span></div><div id="cdOrders" style="margin-top:18px;"></div></div>
+      <div id="cd-chats" class="tpane dc"><div class="dt">My <span class="o">Chats</span></div><div id="cdChats" class="bc-list" style="padding:0;margin-top:18px;"></div></div>
+      <div id="cd-profile" class="tpane dc"><div class="dt">My <span class="o">Profile</span></div><div class="card" style="margin-top:18px;padding:22px;"><div id="cdProf" style="color:var(--text-muted);font-size:.84rem;">Loading...</div></div><button class="btn btn-dng btn-blk" style="margin-top:18px;" onclick="doLogout()">Logout</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: PATIENT DASHBOARD ═══ -->
+<div id="page-patient-dash" class="page">
+  <div class="dash-layout">
+    <div class="dash-sb">
+      <div style="padding:16px 0;">
+        <div class="dub-card"><div class="av-init" id="ptAv">P</div><div class="dub-name" id="ptName">Patient</div><div class="dub-role">🏥 Patient Account</div></div>
+        <button class="dn-item on" onclick="switchDT('pt-health')">📋 Health Records</button>
+        <button class="dn-item" onclick="switchDT('pt-orders')">💊 My Orders</button>
+        <button class="dn-item" onclick="switchDT('pt-profile')">👤 Profile</button>
+        <div style="padding:0 12px;margin-top:18px;"><button class="btn btn-o btn-blk btn-sm" onclick="showPage('telemedicine')">🏥 OTC Marketplace</button><button class="btn btn-dng btn-blk btn-sm" style="margin-top:7px;" onclick="doLogout()">Logout</button></div>
+      </div>
+    </div>
+    <div class="dash-main">
+      <div id="pt-health" class="tpane on dc"><div class="dt">Health <span class="o">Records</span></div><div class="alert al-info on" style="margin-top:18px;">🔒 Your health records are encrypted and visible only to you and medical personnel you explicitly authorize.</div><div class="card" style="margin-top:13px;padding:22px;"><div id="ptHealth" style="color:var(--text-muted);font-size:.84rem;"></div></div><div style="margin-top:12px;"><span class="badge bd-o">Full records module — Coming Soon</span></div></div>
+      <div id="pt-orders" class="tpane dc"><div class="dt">My <span class="o">Orders</span></div><div id="ptOrders" style="margin-top:18px;"></div></div>
+      <div id="pt-profile" class="tpane dc"><div class="dt">My <span class="o">Profile</span></div><div class="card" style="margin-top:18px;padding:22px;"><div id="ptProf" style="color:var(--text-muted);font-size:.84rem;">Loading...</div></div><button class="btn btn-dng btn-blk" style="margin-top:18px;" onclick="doLogout()">Logout</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: ADMIN ═══ -->
+<div id="page-admin" class="page" style="padding-top:60px;">
+  <div class="adm-hd"><div class="adm-ttl">🛡 AxonForge Admin Panel</div><div class="adm-sub" id="admSub">Operations Dashboard — Real-time</div></div>
+  <div class="adm-stats">
+    <div class="as-card"><div class="as-val" id="aV">—</div><div class="as-lbl">Vendors</div></div>
+    <div class="as-card"><div class="as-val" id="aP">—</div><div class="as-lbl">Products</div></div>
+    <div class="as-card"><div class="as-val" id="aO">—</div><div class="as-lbl">Orders</div></div>
+    <div class="as-card"><div class="as-val" id="aPD">—</div><div class="as-lbl">Pick&amp;Drops</div></div>
+  </div>
+  <div class="tbar">
+    <button class="tbtn on" onclick="switchAdmTab(this,'adm-pend')">⏳ Pending</button>
+    <button class="tbtn" onclick="switchAdmTab(this,'adm-ords')">📋 Orders</button>
+    <button class="tbtn" onclick="switchAdmTab(this,'adm-pds')">🚁 Pick&amp;Drop</button>
+    <button class="tbtn" onclick="switchAdmTab(this,'adm-vends')">🏪 Vendors</button>
+    <button class="tbtn" onclick="switchAdmTab(this,'adm-prods')">📦 Products</button>
+  </div>
+  <div id="adm-pend" class="tpane on adm-sec"><div class="adm-sttl">⏳ Pending Verifications</div><div id="admPend"><p style="color:var(--text-muted);font-size:.84rem;">Loading...</p></div></div>
+  <div id="adm-ords" class="tpane adm-sec"><div class="adm-sttl">📋 Marketplace Orders</div><div id="admOrds"><p style="color:var(--text-muted);font-size:.84rem;">Loading...</p></div></div>
+  <div id="adm-pds" class="tpane adm-sec"><div class="adm-sttl">🚁 Pick &amp; Drop Orders</div><div id="admPDs"><p style="color:var(--text-muted);font-size:.84rem;">Loading...</p></div></div>
+  <div id="adm-vends" class="tpane adm-sec"><div class="adm-sttl">🏪 Vendors</div><div id="admVends"><p style="color:var(--text-muted);font-size:.84rem;">Loading...</p></div><div class="adm-sttl" style="margin-top:22px;">⚕️ Medical Personnel</div><div id="admMed"><p style="color:var(--text-muted);font-size:.84rem;">Loading...</p></div></div>
+  <div id="adm-prods" class="tpane adm-sec"><div class="adm-sttl">📦 All Products</div><div id="admProds"><p style="color:var(--text-muted);font-size:.84rem;">Loading...</p></div></div>
+  <div class="adm-sec"><button class="btn btn-dng btn-blk" onclick="doLogout()">Logout from Admin</button></div>
+</div>
+
+<!-- ═══ PAGE: MY CHATS ═══ -->
+<div id="page-mychats" class="page">
+  <div class="pg-hd"><h1>💬 My <span class="o">Chats</span></h1><p>Your bookings and conversations with AxonForge team</p></div>
+  <div id="myChatsList" class="bc-list"></div>
+  <div id="myChatsEmpty" class="empty" style="display:none;"><div class="empty-ic">💬</div><div class="empty-tt">No Chats Yet</div><p>Place a Pick &amp; Drop order or make a purchase to open a chat.</p><br/><button class="btn btn-o btn-sm" onclick="showPage('pickdrop')">Book a Delivery</button></div>
+</div>
+
+<!-- ═══ PAGE: CHAT ═══ -->
+<div id="page-chat" class="page">
+  <div class="chat-layout">
+    <div class="chat-hd">
+      <button class="chat-bk" onclick="showPage('mychats')">←</button>
+      <div class="chat-hd-info">
+        <div class="chat-ref" id="chatRef">BOOKING #—</div>
+        <div class="chat-nm" id="chatNm">—</div>
+        <div class="chat-st">● Live — AxonForge Team</div>
+      </div>
+    </div>
+    <div class="chat-loc" id="chatLoc" style="display:none;">📍 <span id="chatLocTxt">—</span></div>
+    <div class="chat-msgs" id="chatMsgs"><div class="msg sys">Loading messages...</div></div>
+    <div id="invoiceBar" style="display:none;padding:10px 14px;background:rgba(249,115,22,.07);border-top:1px solid rgba(249,115,22,.2);">
+      <div style="font-family:'Orbitron',monospace;font-size:.75rem;color:var(--orange);margin-bottom:8px;">📄 Send Custom Invoice</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;">
+        <div style="flex:1;min-width:140px;"><label class="fl" style="font-size:.65rem;">Item / Description</label><input class="fi" type="text" id="invDesc" placeholder="e.g. Tomatoes bulk 10kg" style="padding:9px 12px;font-size:.82rem;"/></div>
+        <div style="width:120px;"><label class="fl" style="font-size:.65rem;">Price (XAF)</label><input class="fi" type="number" id="invPrice" placeholder="e.g. 8000" style="padding:9px 12px;font-size:.82rem;"/></div>
+        <div style="width:80px;"><label class="fl" style="font-size:.65rem;">Qty</label><input class="fi" type="number" id="invQty" placeholder="1" min="1" style="padding:9px 12px;font-size:.82rem;"/></div>
+        <button class="btn btn-o btn-sm" onclick="sendInvoice()" style="flex-shrink:0;margin-bottom:0;">Send</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleInvoice()" style="flex-shrink:0;margin-bottom:0;">Cancel</button>
+      </div>
+    </div>
+    <div class="chat-bar">
+      <button class="btn-ico" onclick="toggleInvoice()" title="Send Invoice" style="flex-shrink:0;font-size:.9rem;padding:10px;border:1px solid var(--border-o);border-radius:8px;color:var(--orange);" id="invoiceToggleBtn">📄</button>
+      <textarea class="chat-inp" id="chatInp" placeholder="Type a message..." rows="1" onkeydown="chatKey(event)"></textarea>
+      <button class="btn-send" onclick="sendMsg()">➤</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL: SUCCESS -->
+<div class="modal-ov" id="modalOk">
+  <div class="modal">
+    <div class="modal-ic" id="mOkIc">✅</div>
+    <div class="modal-tt" id="mOkTt">Done!</div>
+    <div class="modal-bd" id="mOkBd">Action completed.</div>
+    <div class="modal-acts">
+      <button class="btn btn-o" id="mOkBtn1" onclick="closeModal('modalOk')">OK</button>
+      <button class="btn btn-oo" id="mOkBtn2" style="display:none;" onclick="modalAction2()">View Chat →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: PRODUCT DETAIL -->
+<div class="modal-ov" id="modalProd" onclick="closeProdOv(event)">
+  <div class="pm-modal" id="pmInner">
+    <div class="pm-img" id="pmImg"><span id="pmEm">📦</span></div>
+    <div class="pm-body">
+      <div class="pm-name" id="pmName">Product</div>
+      <div class="pm-vnd" id="pmVnd">by —</div>
+      <div class="pm-desc" id="pmDesc">—</div>
+      <div class="pm-price" id="pmPrice">0 XAF</div>
+      <button class="btn btn-o btn-blk" id="pmCartBtn" onclick="addToCartFromModal()">+ Add to Cart</button>
+      <button class="btn btn-ghost btn-blk btn-sm" style="margin-top:8px;" onclick="closeModal('modalProd')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">—</div>
+<button class="scr-top" id="scrTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+/* ════════════════════════════════════════════════════════════════
+   ▼▼▼  SET YOUR DJANGO BACKEND URL HERE  ▼▼▼
+   Development : http://127.0.0.1:8000/api
+   Production  : https://yourdomain.com/api   (or PythonAnywhere URL)
+════════════════════════════════════════════════════════════════ */
+const API = 'http://127.0.0.1:8000/api';
+
+/* ═══ AUTH TOKEN ═══ */
+const getToken = ()  => localStorage.getItem('axf_token');
+const setToken = (t) => localStorage.setItem('axf_token', t);
+const clearToken= () => localStorage.removeItem('axf_token');
+
+/* ═══ HTTP HELPERS ═══ */
+async function api(path, opts = {}) {
+  const token = getToken();
+  try {
+    const res = await fetch(API + path, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: 'Token ' + token } : {}),
+        ...(opts.headers || {})
+      },
+      ...opts
+    });
+    if (res.status === 401) { clearToken(); updateNav(); showPage('auth'); return null; }
+    const data = await res.json().catch(() => null);
+    return res.ok ? data : null;
+  } catch (e) {
+    console.warn('API error:', e);
+    return null;
+  }
+}
+
+async function apiUpload(path, formData) {
+  const token = getToken();
+  try {
+    const res = await fetch(API + path, {
+      method: 'POST',
+      headers: token ? { Authorization: 'Token ' + token } : {},
+      body: formData
+    });
+    return res.ok ? res.json() : null;
+  } catch (e) {
+    console.warn('Upload error:', e);
+    return null;
+  }
+}
+
+/* ═══ APP STATE ═══ */
+let CU  = null;    // current user object
+let allProds = [], allMedProds = [];
+let selEmo = '📦', curPM = null;
+let pdPickGPS = null, pdDropGPS = null, coGPS = null;
+let activeChatBid = null, pollTimer = null, lastMsgId = 0;
+let modal2Action  = null;
+
+/* ═══ BOOT — check saved session ═══ */
+(async function boot() {
+  if (getToken()) {
+    const data = await api('/auth/me/');
+    if (data) { CU = data; }
+    else       { clearToken(); }
+  }
+  updateNav();
+  updCartBadge();
+  initReveal();
+  window.addEventListener('scroll', () =>
+    document.getElementById('scrTop').classList.toggle('on', window.scrollY > 400));
+})();
+
+function isAdmin() { return CU && CU.is_admin; }
+
+function updateNav() {
+  const btn  = document.getElementById('navAuthBtn');
+  const slbl = document.getElementById('sbAuthLbl');
+  const su   = document.getElementById('sbUser');
+  const ab   = document.getElementById('sbAdminBtn');
+  if (CU) {
+    btn.textContent  = isAdmin() ? '🛡 Admin' : '📊 Dashboard';
+    slbl.textContent = isAdmin() ? 'Admin Panel' : 'My Dashboard';
+    su.style.display = 'block';
+    document.getElementById('sbUName').textContent = CU.first_name || CU.email;
+    document.getElementById('sbURole').textContent = CU.role || 'User';
+    ab.style.display = isAdmin() ? 'flex' : 'none';
+  } else {
+    btn.textContent  = 'Login';
+    slbl.textContent = 'Login / Register';
+    su.style.display = 'none';
+    ab.style.display = 'none';
+  }
+}
+
+function handleNavAuth() {
+  if (!CU) { showPage('auth'); return; }
+  if (isAdmin())           { showPage('admin');        loadAdminData();    return; }
+  switch (CU.role) {
+    case 'vendor':   showPage('vendor-dash');   loadVendorDash();   break;
+    case 'medical':  showPage('medical-dash');  loadMedDash();      break;
+    case 'patient':  showPage('patient-dash');  loadPatientDash();  break;
+    default:         showPage('customer-dash'); loadCustomerDash(); break;
+  }
+}
+
+/* ═══ PAGE ROUTING ═══ */
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-' + name);
+  if (pg) pg.classList.add('active');
+  closeSB();
+  stopPoll();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (name === 'market')       initMkt();
+  if (name === 'ecommerce')    initEcom();
+  if (name === 'telemedicine') initMedMkt();
+  if (name === 'cart')         renderCart();
+  if (name === 'mychats')      renderMyChats();
+  if (name === 'admin' && isAdmin()) loadAdminData();
+}
+function nav(n) { closeSB(); showPage(n); }
+
+/* ═══ SIDEBAR ═══ */
+function toggleSB() {
+  const s=document.getElementById('sb'),o=document.getElementById('sbo'),h=document.getElementById('hbg');
+  s.classList.toggle('open'); o.classList.toggle('on'); h.classList.toggle('open');
+}
+function closeSB() {
+  document.getElementById('sb').classList.remove('open');
+  document.getElementById('sbo').classList.remove('on');
+  document.getElementById('hbg').classList.remove('open');
+}
+
+/* ═══ TABS ═══ */
+function switchMktTab(el, tab) {
+  document.querySelectorAll('#page-market .tbtn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on'); filterMkt(tab);
+}
+function switchTeleTab(el, tab) {
+  document.querySelectorAll('#page-telemedicine .tbtn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('#page-telemedicine .tpane').forEach(p => p.classList.remove('on'));
+  document.getElementById(tab).classList.add('on');
+}
+function switchAdmTab(el, tab) {
+  document.querySelectorAll('#page-admin .tbtn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('#page-admin .tpane').forEach(p => p.classList.remove('on'));
+  document.getElementById(tab).classList.add('on');
+}
+function switchDT(tab) {
+  const ap = document.querySelector('.page.active'); if (!ap) return;
+  ap.querySelectorAll('.tpane').forEach(p => p.classList.remove('on'));
+  ap.querySelectorAll('.dn-item').forEach(b => b.classList.remove('on'));
+  const pane = document.getElementById(tab); if (pane) pane.classList.add('on');
+  if (event && event.target) event.target.classList.add('on');
+}
+function switchATab(t) {
+  document.querySelectorAll('.at-btn').forEach((b,i) =>
+    b.classList.toggle('on', (i===0&&t==='login')||(i===1&&t==='reg')));
+  document.getElementById('authLogin').classList.toggle('on', t==='login');
+  document.getElementById('authReg').classList.toggle('on', t==='reg');
+}
+
+/* ═══ REGISTER TYPE SELECTOR ═══ */
+function selType(el) {
+  document.querySelectorAll('.type-opt').forEach(o => o.classList.remove('on'));
+  el.classList.add('on');
+  const t = el.dataset.type;
+  document.getElementById('bizFields').style.display   = (t==='vendor'||t==='medical') ? 'block' : 'none';
+  document.getElementById('patFields').style.display   = (t==='patient')               ? 'block' : 'none';
+  document.getElementById('medRoleField').style.display= (t==='medical')               ? 'block' : 'none';
+  document.getElementById('verNote').style.display     = (t==='vendor'||t==='medical') ? 'block' : 'none';
+}
+
+/* ═══ IMAGE PREVIEW ═══ */
+function prevImg(input, prevId) {
+  const f = input.files[0], p = document.getElementById(prevId);
+  if (!f || !p) return;
+  const r = new FileReader();
+  r.onload = e => { p.src = e.target.result; p.style.display = 'block'; };
+  r.readAsDataURL(f);
+}
+
+/* ═══ REGISTER ═══ */
+async function doReg() {
+  const typeEl = document.querySelector('.type-opt.on');
+  const role   = typeEl ? typeEl.dataset.type : 'customer';
+  const name   = document.getElementById('regName').value.trim();
+  const phone  = document.getElementById('regPhone').value.trim();
+  const email  = document.getElementById('regEmail').value.trim().toLowerCase();
+  const pass   = document.getElementById('regPass').value;
+  hideA('regErr'); hideA('regOk');
+
+  if (!name||!phone||!email||!pass) { showA('regErr','Please fill in all required fields.'); return; }
+  if (pass.length < 6)              { showA('regErr','Password must be at least 6 characters.'); return; }
+
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="sp"></span>Creating Account...';
+
+  const fd = new FormData();
+  fd.append('name',  name);
+  fd.append('phone', phone);
+  fd.append('email', email);
+  fd.append('password', pass);
+  fd.append('role', role);
+  if (role==='vendor'||role==='medical') {
+    fd.append('biz_name', document.getElementById('regBizName').value.trim());
+    fd.append('zone',     document.getElementById('regZone').value);
+    if (role==='medical') fd.append('med_role', document.getElementById('regMedRole').value);
+    const idF = document.getElementById('idFront').files[0];
+    const idB = document.getElementById('idBack').files[0];
+    const lg  = document.getElementById('logoUp').files[0];
+    if (idF) fd.append('id_front', idF);
+    if (idB) fd.append('id_back',  idB);
+    if (lg)  fd.append('logo',     lg);
+  }
+  if (role==='patient') fd.append('conditions', document.getElementById('regCond').value.trim());
+  const profFile = document.getElementById('profUp').files[0];
+  if (profFile) fd.append('profile_pic', profFile);
+
+  const data = await apiUpload('/auth/register/', fd);
+  if (data && data.token) {
+    setToken(data.token); CU = data.user;
+    showA('regOk', (role==='vendor'||role==='medical')
+      ? 'Account created! Submit your ID within 40 days for permanent activation.'
+      : 'Account created! You are now logged in.');
+    updateNav();
+    setTimeout(() => handleNavAuth(), 1400);
+  } else {
+    showA('regErr', 'Registration failed. Email may already be in use.');
+  }
+  btn.disabled = false; btn.textContent = 'Create Account →';
+}
+
+/* ═══ LOGIN ═══ */
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('loginPass').value;
+  hideA('loginErr');
+  if (!email||!pass) { showA('loginErr','Enter your email and password.'); return; }
+
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="sp"></span>Logging in...';
+
+  const data = await api('/auth/login/', {
+    method: 'POST',
+    body:   JSON.stringify({ email, password: pass })
+  });
+  if (data && data.token) {
+    setToken(data.token); CU = data.user;
+    updateNav();
+    handleNavAuth();
+  } else {
+    showA('loginErr','Incorrect email or password.');
+  }
+  btn.disabled = false; btn.textContent = 'Login →';
+}
+
+/* ═══ LOGOUT ═══ */
+async function doLogout() {
+  clearToken(); CU = null;
+  updateNav(); showPage('home');
+}
+
+/* ═══ MARKETPLACE ═══ */
+async function initMkt() {
+  const [prods, meds] = await Promise.all([
+    api('/products/'),
+    api('/products/?medical=true')
+  ]);
+  allProds    = (prods || []).map(p => ({ ...p, pt: 'c' }));
+  allMedProds = (meds  || []).map(p => ({ ...p, pt: 'm' }));
+  renderMktGrid();
+}
+async function initEcom() {
+  const prods = await api('/products/');
+  allProds = (prods || []).map(p => ({ ...p, pt: 'c' }));
+  renderGridTo('ecomGrid','ecomEmpty', allProds, 'c');
+}
+async function initMedMkt() {
+  const meds = await api('/products/?medical=true');
+  allMedProds = (meds || []).map(p => ({ ...p, pt: 'm' }));
+  renderGridTo('medGrid','medEmpty', allMedProds, 'm');
+}
+
+function filterMkt(tf) {
+  const s = (document.getElementById('mktSrch')||{value:''}).value.toLowerCase();
+  const c = (document.getElementById('mktCat')||{value:''}).value;
+  const all = [...allProds, ...allMedProds];
+  const f = all.filter(p =>
+    (!s || p.name.toLowerCase().includes(s) || (p.vendor_name||'').toLowerCase().includes(s)) &&
+    (!c || p.category === c) &&
+    (!tf || tf === 'all' || p.pt === tf)
+  );
+  renderGridTo('mktGrid','mktEmpty', f, 'all');
+}
+function filterEcom() {
+  const s = document.getElementById('ecomSrch').value.toLowerCase();
+  const c = document.getElementById('ecomCat').value;
+  renderGridTo('ecomGrid','ecomEmpty',
+    allProds.filter(p => (!s||p.name.toLowerCase().includes(s)||(p.vendor_name||'').toLowerCase().includes(s))&&(!c||p.category===c)), 'c');
+}
+function filterMed() {
+  const s = document.getElementById('medSrch').value.toLowerCase();
+  renderGridTo('medGrid','medEmpty', allMedProds.filter(p => !s||p.name.toLowerCase().includes(s)), 'm');
+}
+function renderMktGrid() { filterMkt('all'); }
+
+function renderGridTo(gid, eid, prods, ctx) {
+  const g = document.getElementById(gid), e = document.getElementById(eid);
+  if (!g) return;
+  if (!prods.length) { g.innerHTML = ''; e.style.display = 'block'; return; }
+  e.style.display = 'none';
+  g.innerHTML = prods.map(p => {
+    const isM   = p.pt === 'm';
+    const imgH  = p.image_url ? `<img src="${p.image_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;"/>` : (p.emoji||'📦');
+    return `<div class="pcard" onclick="openPM(${p.id},'${p.pt||'c'}')">
+      <div class="pthumb">${imgH}
+        <span class="ptype-b badge ${isM?'bd-g':'bd-b'}">${isM?'OTC':'Shop'}</span>
+        <span class="vtag">${p.vendor_name||'Vendor'}</span>
+      </div>
+      <div class="pbody">
+        <div class="pname">${p.name}</div>
+        <div class="pcat">${p.category||'General'}</div>
+        <div class="pprice">${Number(p.price).toLocaleString()} XAF</div>
+        <button class="btn-cart" onclick="event.stopPropagation();addToCart(${p.id},'${p.pt||'c'}')" ${p.stock<=0?'disabled':''}>
+          ${p.stock<=0?'Out of Stock':'+ Add to Cart'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══ PRODUCT MODAL ═══ */
+function openPM(id, pt) {
+  const pool = pt==='m' ? allMedProds : allProds;
+  const p    = pool.find(x => x.id === id); if (!p) return;
+  curPM = p;
+  const pmImg = document.getElementById('pmImg');
+  pmImg.innerHTML = p.image_url
+    ? `<img src="${p.image_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;"/>`
+    : `<span id="pmEm">${p.emoji||'📦'}</span>`;
+  document.getElementById('pmName').textContent  = p.name;
+  document.getElementById('pmVnd').textContent   = 'by ' + (p.vendor_name||'Vendor');
+  document.getElementById('pmDesc').textContent  = p.desc || 'No description available.';
+  document.getElementById('pmPrice').textContent = Number(p.price).toLocaleString() + ' XAF';
+  const btn = document.getElementById('pmCartBtn');
+  btn.textContent = p.stock<=0 ? 'Out of Stock' : '+ Add to Cart';
+  btn.disabled    = p.stock<=0;
+  document.getElementById('modalProd').classList.add('on');
+}
+function closeProdOv(e) { if (e.target.id==='modalProd') closeModal('modalProd'); }
+function addToCartFromModal() { if (curPM) { addToCart(curPM.id, curPM.pt||'c'); closeModal('modalProd'); } }
+
+/* ═══ CART (localStorage — no API needed for cart itself) ═══ */
+function getCart()   { try { return JSON.parse(localStorage.getItem('axf_cart'))||[]; } catch { return []; } }
+function saveCart(c) { try { localStorage.setItem('axf_cart', JSON.stringify(c)); }    catch {} }
+
+function addToCart(id, pt) {
+  const pool = pt==='m' ? allMedProds : allProds;
+  const p    = pool.find(x => x.id === id);
+  if (!p || p.stock<=0) return;
+  let cart = getCart();
+  const ex = cart.find(c => c.id === id);
+  if (ex) ex.qty++;
+  else cart.push({ id: p.id, name: p.name, price: p.price, emoji: p.emoji||'📦',
+                   image_url: p.image_url||null, vendor_name: p.vendor_name||'', pt, qty: 1 });
+  saveCart(cart); updCartBadge(); toast('Added: ' + p.name);
+}
+
+function renderCart() {
+  const cart  = getCart();
+  const items = document.getElementById('cartItems');
+  const sum   = document.getElementById('cartSum');
+  const emp   = document.getElementById('cartEmpty');
+  if (!cart.length) { items.innerHTML=''; sum.style.display='none'; emp.style.display='block'; return; }
+  emp.style.display='none'; sum.style.display='block';
+  items.innerHTML = cart.map(i => `
+    <div class="ci">
+      <div class="ci-img">${i.image_url?`<img src="${i.image_url}" alt="${i.name}"/>`:i.emoji||'📦'}</div>
+      <div class="ci-info">
+        <div class="ci-name">${i.name}</div>
+        <div class="ci-vnd">by ${i.vendor_name}</div>
+        <div class="ci-price">${Number(i.price).toLocaleString()} XAF × ${i.qty}</div>
+        <div class="ci-qty">
+          <button class="qty-btn" onclick="chgQty(${i.id},-1)">−</button>
+          <span class="qty-n">${i.qty}</span>
+          <button class="qty-btn" onclick="chgQty(${i.id},1)">+</button>
+        </div>
+      </div>
+      <button class="btn-rm" onclick="rmFromCart(${i.id})">✕</button>
+    </div>`).join('');
+  const sub = cart.reduce((s,i) => s + i.price*i.qty, 0);
+  const com = Math.round(sub * 0.03);
+  const tot = sub + 800 + com;
+  document.getElementById('cSubtotal').textContent = sub.toLocaleString() + ' XAF';
+  document.getElementById('cComm').textContent     = com.toLocaleString() + ' XAF';
+  document.getElementById('cTotal').textContent    = tot.toLocaleString() + ' XAF';
+  updCartBadge();
+}
+function chgQty(id, d)   { let cart=getCart(); const i=cart.find(x=>x.id===id); if(!i)return; i.qty+=d; if(i.qty<=0)cart=cart.filter(x=>x.id!==id); saveCart(cart); renderCart(); }
+function rmFromCart(id)  { saveCart(getCart().filter(i=>i.id!==id)); renderCart(); updCartBadge(); }
+function clearCart()     { saveCart([]); renderCart(); updCartBadge(); }
+function updCartBadge()  {
+  const n = getCart().reduce((s,i)=>s+i.qty,0);
+  ['cartBadge','cartBadgeSB'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent=n;el.style.display=n>0?'flex':'none';}});
+}
+
+/* ═══ CHECKOUT ═══ */
+async function checkout() {
+  const cart  = getCart(); if (!cart.length) return;
+  const name  = document.getElementById('coName').value.trim();
+  const phone = document.getElementById('coPhone').value.trim();
+  const addr  = document.getElementById('coAddr').value.trim();
+  const meth  = document.getElementById('coMethod').value;
+  if (!name||!phone||!addr) { toast('Please fill in your name, phone and address.'); return; }
+  if (meth==='drone'&&!coGPS) { toast('GPS location required for drone delivery.'); return; }
+
+  const btn = document.getElementById('checkoutBtn');
+  btn.disabled=true; btn.innerHTML='<span class="sp"></span>Placing Order...';
+
+  const payload = {
+    customer_name: name, phone, address: addr,
+    delivery_gps: coGPS, delivery_method: meth,
+    items: cart.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty,vendor_name:i.vendor_name}))
+  };
+  const data = await api('/orders/', { method:'POST', body: JSON.stringify(payload) });
+
+  if (data && data.chat_id) {
+    saveLocalChat(data.chat_id, name, 'Marketplace Order', addr, '', coGPS, null, 'order');
+    clearCart(); coGPS=null;
+    ['coName','coPhone','coAddr'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
+    document.getElementById('coGPS').classList.remove('on');
+    showOkModal('🛒','Order Placed!',
+      'Payment held in escrow. A chat with the AxonForge team is now open.',
+      'OK','View Chat →', () => openChat(data.chat_id, name, 'Marketplace Order', addr, '', coGPS, null));
+  } else {
+    toast('Order failed — check backend connection.');
+  }
+  btn.disabled=false; btn.textContent='Place Order →';
+}
+
+/* ═══ PICK & DROP ═══ */
+async function submitPD() {
+  const desc      = document.getElementById('pdDesc').value.trim();
+  const val       = parseInt(document.getElementById('pdVal').value)||0;
+  const type      = document.getElementById('pdType').value;
+  const pickTxt   = document.getElementById('pdPickTxt').value.trim();
+  const dropTxt   = document.getElementById('pdDropTxt').value.trim();
+  const pickName  = document.getElementById('pdPickName').value.trim();
+  const pickPhone = document.getElementById('pdPickPhone').value.trim();
+  const dropName  = document.getElementById('pdDropName').value.trim();
+  const dropPhone = document.getElementById('pdDropPhone').value.trim();
+  const yName     = document.getElementById('pdYName').value.trim();
+  const yPhone    = document.getElementById('pdYPhone').value.trim();
+  if (!desc||!pickTxt||!dropTxt||!yName||!yPhone) { toast('Please fill in all required fields.'); return; }
+
+  const btn = document.getElementById('pdBtn');
+  btn.disabled=true; btn.innerHTML='<span class="sp"></span>Submitting...';
+
+  const payload = {
+    customer_name: yName, customer_phone: yPhone,
+    description: desc, estimated_value: val, item_type: type,
+    pickup_text: pickTxt, pickup_gps: pdPickGPS,
+    pickup_contact_name: pickName, pickup_contact_phone: pickPhone,
+    drop_text: dropTxt, drop_gps: pdDropGPS,
+    drop_contact_name: dropName, drop_contact_phone: dropPhone,
+  };
+  const data = await api('/pickdrops/', { method:'POST', body: JSON.stringify(payload) });
+
+  if (data && data.chat_id) {
+    saveLocalChat(data.chat_id, yName,'Pick & Drop', pickTxt, dropTxt, pdPickGPS, pdDropGPS,'pickdrop');
+    pdPickGPS=null; pdDropGPS=null;
+    ['pdDesc','pdPickTxt','pdDropTxt','pdPickName','pdPickPhone','pdDropName','pdDropPhone','pdYName','pdYPhone','pdVal']
+      .forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
+    ['pdPickGPS','pdDropGPS'].forEach(id=>{ const el=document.getElementById(id); if(el)el.classList.remove('on'); });
+    showOkModal('🚁','Order Submitted!',
+      'Your Pick & Drop is under security screening. Chat is now open with the team.',
+      'OK','Open Chat →', () => openChat(data.chat_id, yName,'Pick & Drop', pickTxt, dropTxt, pdPickGPS, pdDropGPS));
+  } else {
+    toast('Submission failed — check backend connection.');
+  }
+  btn.disabled=false; btn.textContent='🚁 Submit Pick & Drop Order';
+}
+
+/* ═══ GPS ═══ */
+function getGPS(ctx) {
+  if (!navigator.geolocation) { toast('GPS not supported on this browser'); return; }
+  const btn = document.querySelector(`[onclick="getGPS('${ctx}')"]`);
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="sp"></span>Getting location...'; }
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude.toFixed(6);
+    const lng = pos.coords.longitude.toFixed(6);
+    const acc = Math.round(pos.coords.accuracy);
+    const url = `https://maps.google.com/?q=${lat},${lng}`;
+    const html= `📍 ${lat}, ${lng} (±${acc}m) — <a href="${url}" target="_blank">View on Maps</a>`;
+    const gd  = { lat, lng, acc };
+    if (ctx==='pdPick') { pdPickGPS=gd; setGPS('pdPickGPS',html); }
+    else if (ctx==='pdDrop') { pdDropGPS=gd; setGPS('pdDropGPS',html); }
+    else if (ctx==='co')     { coGPS=gd;     setGPS('coGPS',html); }
+    if (btn) { btn.disabled=false; btn.textContent='✅ GPS Captured'; }
+    toast('GPS captured!');
+  }, () => {
+    if (btn) { btn.disabled=false; btn.textContent='📍 Share GPS'; }
+    toast('GPS failed — allow location access');
+  }, { enableHighAccuracy:true, timeout:12000 });
+}
+function setGPS(id,html) { const el=document.getElementById(id); if(el){el.innerHTML=html;el.classList.add('on');} }
+
+/* ═══ CHAT — polling every 3 seconds ═══ */
+function saveLocalChat(id,name,type,pt,dt,pg,dg,ct) {
+  let chats = JSON.parse(localStorage.getItem('axf_chats')||'[]');
+  chats = chats.filter(c=>c.id!==id); // deduplicate
+  chats.unshift({id,name,type,pt,dt,pg,dg,ct,createdAt:new Date().toISOString()});
+  localStorage.setItem('axf_chats', JSON.stringify(chats.slice(0,30)));
+}
+
+function renderMyChats() {
+  const chats = JSON.parse(localStorage.getItem('axf_chats')||'[]');
+  const list  = document.getElementById('myChatsList');
+  const emp   = document.getElementById('myChatsEmpty');
+  if (!chats.length) { list.innerHTML=''; emp.style.display='block'; return; }
+  emp.style.display='none';
+  list.innerHTML = chats.map(c=>`
+    <div class="bc-card" onclick="openChat('${c.id}','${(c.name||'').replace(/'/g,"\\'")}','${c.type||''}','${(c.pt||'').replace(/'/g,"\\'")}','${(c.dt||'').replace(/'/g,"\\'")}',${c.pg?JSON.stringify(c.pg):'null'},${c.dg?JSON.stringify(c.dg):'null'})">
+      <div class="bc-meta"><div class="bc-ref">#${c.id}</div><div class="bc-time">${new Date(c.createdAt).toLocaleDateString()}</div></div>
+      <div class="bc-name">${c.name}</div>
+      <div class="bc-route">📍 ${c.pt||'—'} → ${c.dt||'—'}</div>
+      <div style="margin-top:7px;font-size:.71rem;color:var(--orange);">${c.type||''} · Tap to open chat →</div>
+    </div>`).join('');
+}
+
+async function openChat(id,name,type,pt,dt,pg,dg) {
+  activeChatBid = id; lastMsgId = 0;
+  document.getElementById('chatRef').textContent = 'BOOKING #' + id;
+  document.getElementById('chatNm').textContent  = name;
+  const loc    = document.getElementById('chatLoc');
+  const locTxt = document.getElementById('chatLocTxt');
+  if (pg||dg) {
+    loc.style.display = 'flex';
+    let parts = [];
+    if (pg) parts.push(`Pickup: <a href="https://maps.google.com/?q=${pg.lat},${pg.lng}" target="_blank">${pg.lat},${pg.lng}</a>`);
+    if (dg) parts.push(`Drop-off: <a href="https://maps.google.com/?q=${dg.lat},${dg.lng}" target="_blank">${dg.lat},${dg.lng}</a>`);
+    locTxt.innerHTML = parts.join(' | ');
+  } else { loc.style.display='none'; }
+
+  const mc = document.getElementById('chatMsgs');
+  mc.innerHTML = '<div class="msg sys">Loading messages...</div>';
+  showPage('chat');
+
+  // Load initial messages
+  const msgs = await api(`/chats/${id}/messages/`);
+  mc.innerHTML = '';
+  if (msgs && msgs.length) {
+    msgs.forEach(m => appendMsg(mc, m));
+    lastMsgId = msgs[msgs.length-1].id;
+  } else {
+    mc.innerHTML = '<div class="msg sys">Say hello to the team! 👋</div>';
+  }
+  mc.scrollTop = mc.scrollHeight;
+
+  // Start polling every 3 seconds
+  stopPoll();
+  pollTimer = setInterval(async () => {
+    const newMsgs = await api(`/chats/${id}/messages/?after=${lastMsgId}`);
+    if (newMsgs && newMsgs.length) {
+      if (mc.querySelector('.msg.sys') && mc.querySelector('.msg.sys').textContent.includes('Say hello')) {
+        mc.innerHTML='';
+      }
+      newMsgs.forEach(m => appendMsg(mc, m));
+      lastMsgId = newMsgs[newMsgs.length-1].id;
+      mc.scrollTop = mc.scrollHeight;
+    }
+  }, 3000);
+}
+
+function appendMsg(container, m) {
+  const isSys  = m.sender_type === 'system';
+  const isAdm  = m.sender_type === 'admin' || m.sender_type === 'medical';
+  const isSelf = !isSys && !isAdm && m.sender_type === 'customer';
+  const time   = m.created_at ? new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '';
+  const div    = document.createElement('div');
+  div.className = 'msg ' + (isSys?'sys':isSelf?'sent':'recv');
+  div.innerHTML  = isSys
+    ? m.text.replace(/\n/g,'<br/>')
+    : `${!isSelf?`<div class="msg-sndr">${m.sender_name||'Team'}</div>`:''}${m.text.replace(/\n/g,'<br/>')}<div class="msg-time">${time}</div>`;
+  container.appendChild(div);
+}
+
+function stopPoll() { if (pollTimer) { clearInterval(pollTimer); pollTimer=null; } }
+
+async function sendMsg() {
+  if (!activeChatBid) return;
+  const inp  = document.getElementById('chatInp');
+  const text = inp.value.trim(); if (!text) return;
+  inp.value  = '';
+  const senderName = CU ? (isAdmin()?'AxonForge Team':CU.first_name||'Customer') : 'Customer';
+  await api(`/chats/${activeChatBid}/messages/`, {
+    method: 'POST',
+    body: JSON.stringify({ text, sender_name: senderName })
+  });
+}
+function chatKey(e) { if (e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); sendMsg(); } }
+
+/* ═══ INVOICE FEATURE ═══ */
+function toggleInvoice() {
+  const bar = document.getElementById('invoiceBar');
+  bar.style.display = bar.style.display==='none' ? 'block' : 'none';
+}
+async function sendInvoice() {
+  if (!activeChatBid) return;
+  const desc  = document.getElementById('invDesc').value.trim();
+  const price = parseInt(document.getElementById('invPrice').value)||0;
+  const qty   = parseInt(document.getElementById('invQty').value)||1;
+  if (!desc||!price) { toast('Fill in item description and price.'); return; }
+  const total = price * qty;
+  const text  = `📄 INVOICE\n━━━━━━━━━━━━━━━━\nItem: ${desc}\nUnit Price: ${price.toLocaleString()} XAF\nQuantity: ${qty}\n━━━━━━━━━━━━━━━━\nTotal: ${total.toLocaleString()} XAF\n\nReply to confirm this bulk order.`;
+  await api(`/chats/${activeChatBid}/messages/`, { method:'POST', body: JSON.stringify({ text, sender_name: CU?.biz_name||CU?.first_name||'Vendor' }) });
+  document.getElementById('invDesc').value='';
+  document.getElementById('invPrice').value='';
+  document.getElementById('invQty').value='';
+  document.getElementById('invoiceBar').style.display='none';
+  toast('Invoice sent!');
+}
+
+/* ═══ MED CONSULT ═══ */
+async function startMedChat() {
+  const type = document.getElementById('teleType').value;
+  const name = document.getElementById('teleNm').value.trim();
+  const msg  = document.getElementById('teleMsg').value.trim();
+  if (!name||!msg) { toast('Please fill in your name and describe your symptoms.'); return; }
+
+  const btn = document.querySelector('[onclick="startMedChat()"]');
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="sp"></span>Finding available '+type+'...'; }
+
+  const data = await api('/med-consults/', {
+    method: 'POST',
+    body: JSON.stringify({ patient_name:name, consult_type:type, symptoms:msg })
+  });
+
+  if (data && data.chat_id) {
+    saveLocalChat(data.chat_id, name,'Medical Consultation','—','—',null,null,'medical_consult');
+    document.getElementById('teleNm').value='';
+    document.getElementById('teleMsg').value='';
+    const msg2 = data.assigned
+      ? `Connected to ${data.assigned_name}! Opening chat...`
+      : `No ${type} available right now — request queued. Opening chat...`;
+    toast(msg2);
+    if (btn) { btn.disabled=false; btn.textContent='💬 Start Text Consultation'; }
+    setTimeout(() => openChat(data.chat_id, name, 'Medical Consultation','—','—',null,null), 900);
+  } else {
+    toast('Failed — check backend connection.');
+    if (btn) { btn.disabled=false; btn.textContent='💬 Start Text Consultation'; }
+  }
+}
+
+/* ═══ VENDOR DASHBOARD ═══ */
+async function loadVendorDash() {
+  if (!CU) return;
+  document.getElementById('vdName').textContent = CU.first_name||'Vendor';
+  document.getElementById('vdZone').textContent = (CU.zone||'—').split(' ')[0];
+  const sb = document.getElementById('vdStatBadge');
+  sb.innerHTML = CU.status==='pending'
+    ? '<span class="badge bd-y">⏳ Pending Confirmation</span>'
+    : '<span class="badge bd-g">✅ Active</span>';
+
+  const prods = await api('/products/?mine=true');
+  const myProds = (prods||[]).map(p=>({...p,pt:'c'}));
+  allProds = [...allProds.filter(p=>p.vendor_id!==CU.id), ...myProds];
+  document.getElementById('vdNProds').textContent = myProds.length;
+  renderVdProds(myProds);
+
+  const orders = await api('/orders/');
+  document.getElementById('vdNOrds').textContent = (orders||[]).length;
+
+  document.getElementById('vdProf').innerHTML=`
+    <strong>${CU.first_name}</strong><br/>
+    Business: ${CU.biz_name||'—'}<br/>
+    Zone: ${CU.zone||'—'}<br/>
+    Phone: ${CU.phone||'—'}<br/>
+    Email: ${CU.email||'—'}<br/>
+    Status: <span style="color:var(--orange)">${CU.status}</span>`;
+
+  loadVdChats();
+}
+
+function renderVdProds(prods) {
+  const list = document.getElementById('vdProdList');
+  const nop  = document.getElementById('vdNoProd');
+  if (!prods.length) { list.innerHTML=''; nop.style.display='block'; return; }
+  nop.style.display='none';
+  list.innerHTML = prods.map(p=>`
+    <div class="prow">
+      <div class="pr-img">${p.image_url?`<img src="${p.image_url}"/>`:p.emoji||'📦'}</div>
+      <div class="pr-info">
+        <div class="pr-name">${p.name}</div>
+        <div class="pr-meta">${p.category} · Stock: ${p.stock}</div>
+        <div class="pr-price">${Number(p.price).toLocaleString()} XAF</div>
+      </div>
+      <button class="btn btn-dng btn-sm" onclick="delProd(${p.id},false)">Delete</button>
+    </div>`).join('');
+}
+
+async function addProd() {
+  if (!CU) return;
+  const name  = document.getElementById('pName').value.trim();
+  const desc  = document.getElementById('pDesc').value.trim();
+  const cat   = document.getElementById('pCat').value;
+  const price = parseInt(document.getElementById('pPrice').value);
+  const stock = parseInt(document.getElementById('pStock').value);
+  if (!name||!desc||!price||!stock) { document.getElementById('prodErr').classList.add('on'); return; }
+  document.getElementById('prodErr').classList.remove('on');
+
+  const btn = document.getElementById('addProdBtn');
+  btn.disabled=true; btn.innerHTML='<span class="sp"></span>Listing...';
+
+  const fd = new FormData();
+  fd.append('name', name); fd.append('desc', desc); fd.append('category', cat);
+  fd.append('price', price); fd.append('stock', stock); fd.append('emoji', selEmo);
+  const imgFile = document.getElementById('pImgUp').files[0];
+  if (imgFile) fd.append('image', imgFile);
+
+  const data = await apiUpload('/products/', fd);
+  if (data) {
+    ['pName','pDesc','pPrice','pStock'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('pImgUp').value='';
+    document.getElementById('pImgPrev').style.display='none';
+    toast('Product listed: '+name);
+    loadVendorDash(); // refresh
+  }
+  btn.disabled=false; btn.textContent='+ List This Product';
+}
+
+function selEm(el) { document.querySelectorAll('.em-opt').forEach(e=>e.classList.remove('on')); el.classList.add('on'); selEmo=el.dataset.em; }
+
+async function delProd(id, isMed) {
+  if (!confirm('Remove this product?')) return;
+  const path = isMed ? `/products/${id}/` : `/products/${id}/`;
+  const ok = await api(path, { method:'DELETE' });
+  if (ok !== null) { toast('Product removed.'); loadVendorDash(); }
+}
+
+async function loadVdChats() {
+  const el = document.getElementById('vdChats'); if (!el) return;
+  const chats = await api('/chats/');
+  if (!chats||!chats.length) { el.innerHTML='<p style="color:var(--text-muted);font-size:.84rem;">No chats yet.</p>'; return; }
+  el.innerHTML = chats.map(c=>`
+    <div class="bc-card" onclick="openChat('${c.booking_id}','${(c.customer_name||'').replace(/'/g,"\\'")}','${c.chat_type||''}','${(c.pickup_text||c.address||'').replace(/'/g,"\\'")}','',null,null)">
+      <div class="bc-ref">#${c.booking_id}</div>
+      <div class="bc-name">${c.customer_name||'Customer'}</div>
+      <div class="bc-route">📍 ${c.pickup_text||c.address||'—'}</div>
+      <div style="font-size:.7rem;color:var(--text-muted);margin-top:4px;">${c.last_message||''}</div>
+    </div>`).join('');
+}
+
+/* ═══ MEDICAL DASHBOARD ═══ */
+async function loadMedDash() {
+  if (!CU) return;
+  document.getElementById('mdName').textContent    = CU.first_name||'Medical';
+  document.getElementById('mdRoleLbl').textContent = '⚕️ ' + (CU.med_role||'Medical Personnel');
+  document.getElementById('mdStatus').textContent  = CU.status==='active' ? '✅' : '⏳';
+  document.getElementById('mdProf').innerHTML=`<strong>${CU.first_name}</strong><br/>Role: ${CU.med_role||'—'}<br/>Establishment: ${CU.biz_name||'—'}<br/>Status: <span style="color:var(--orange)">${CU.status}</span>`;
+
+  const prods = await api('/products/?medical=true&mine=true');
+  const myProds = (prods||[]).map(p=>({...p,pt:'m'}));
+  document.getElementById('mdNProds').textContent = myProds.length;
+  document.getElementById('mdProdList').innerHTML = myProds.map(p=>`
+    <div class="prow">
+      <div class="pr-img">💊</div>
+      <div class="pr-info">
+        <div class="pr-name">${p.name}</div>
+        <div class="pr-meta">Stock: ${p.stock}</div>
+        <div class="pr-price">${Number(p.price).toLocaleString()} XAF</div>
+      </div>
+      <button class="btn btn-dng btn-sm" onclick="delProd(${p.id},true)">Delete</button>
+    </div>`).join('');
+
+  const consultsData = await api('/med-consults/mine/');
+  document.getElementById('mdNOrds').textContent = (consultsData?.assigned||[]).length;
+  const el = document.getElementById('mdOrders');
+  if (el && consultsData) {
+    const assigned = consultsData.assigned || [];
+    const queued   = consultsData.queued   || [];
+    el.innerHTML = [
+      ...assigned.map(c=>`
+        <div class="o-item" style="border-left-color:var(--orange);">
+          <div class="o-type" style="color:var(--orange);">🏥 ACTIVE CONSULTATION</div>
+          <div class="o-det"><strong>${c.patient_name}</strong> — ${(c.consult_type||'').toUpperCase()}<br/><em style="color:var(--text-muted);">"${c.symptoms}"</em></div>
+          <button class="btn-cht" onclick="openChat('${c.booking_id}','${(c.patient_name||'').replace(/'/g,"\\'")}','Medical Consultation','—','—',null,null)" style="margin-top:8px;">💬 Respond to Patient</button>
+        </div>`),
+      ...queued.map(c=>`
+        <div class="o-item" style="border-left-color:var(--yellow);">
+          <div class="o-type" style="color:var(--yellow);">⏳ QUEUED — Needs ${(c.consult_type||'').toUpperCase()}</div>
+          <div class="o-det"><strong>${c.patient_name}</strong><br/><em style="color:var(--text-muted);">"${c.symptoms}"</em></div>
+          <button class="btn-conf" onclick="selfAssignConsult(${c.id})" style="margin-top:8px;">Accept Consultation</button>
+        </div>`)
+    ].join('') || '<p style="color:var(--text-muted);">No active consultations.</p>';
+  }
+}
+
+async function selfAssignConsult(id) {
+  const data = await api(`/med-consults/${id}/`, { method:'PATCH', body: JSON.stringify({ action:'self_assign' }) });
+  if (data) { toast('Consultation accepted!'); loadMedDash(); }
+}
+
+async function addMedProd() {
+  if (!CU) return;
+  const name  = document.getElementById('mpName').value.trim();
+  const desc  = document.getElementById('mpDesc').value.trim();
+  const price = parseInt(document.getElementById('mpPrice').value);
+  const stock = parseInt(document.getElementById('mpStock').value);
+  if (!name||!desc||!price||!stock) { document.getElementById('mpErr').classList.add('on'); return; }
+  document.getElementById('mpErr').classList.remove('on');
+  const btn = document.getElementById('addMpBtn');
+  btn.disabled=true; btn.innerHTML='<span class="sp"></span>Listing...';
+  const fd = new FormData();
+  fd.append('name',name); fd.append('desc',desc); fd.append('price',price);
+  fd.append('stock',stock); fd.append('emoji','💊');
+  const data = await apiUpload('/products/?medical=true', fd);
+  if (data) { ['mpName','mpDesc','mpPrice','mpStock'].forEach(id=>document.getElementById(id).value=''); toast('Medication listed: '+name); loadMedDash(); }
+  btn.disabled=false; btn.textContent='+ List Medication';
+}
+
+/* ═══ CUSTOMER DASHBOARD ═══ */
+async function loadCustomerDash() {
+  if (!CU) return;
+  document.getElementById('cdName').textContent = CU.first_name||'Customer';
+  document.getElementById('cdProf').innerHTML=`<strong>${CU.first_name}</strong><br/>Phone: ${CU.phone||'—'}<br/>Email: ${CU.email||'—'}`;
+  const orders = await api('/orders/');
+  const el = document.getElementById('cdOrders');
+  el.innerHTML = !(orders&&orders.length) ? '<p style="color:var(--text-muted);">No orders yet.</p>'
+    : orders.map(o=>{
+        const t = o.created_at ? new Date(o.created_at).toLocaleString() : '—';
+        return`<div class="o-item">
+          <div class="o-type">🛒 ORDER</div>
+          <div class="o-det">${(o.items||[]).map(i=>`${i.name} ×${i.qty}`).join(', ')}</div>
+          <div class="o-tot">${Number(o.total||0).toLocaleString()} XAF</div>
+          <div class="o-time">${t}</div>
+          <button class="btn-cht" onclick="openChat('ORD-${o.id}','${(o.customer_name||'').replace(/'/g,"\\'")}','order','${(o.address||'').replace(/'/g,"\\'")}','',null,null)" style="margin-top:7px;">💬 Open Chat</button>
+        </div>`;}).join('');
+}
+
+/* ═══ PATIENT DASHBOARD ═══ */
+async function loadPatientDash() {
+  if (!CU) return;
+  document.getElementById('ptName').textContent = CU.first_name||'Patient';
+  const h = `<strong>${CU.first_name}</strong><br/>Phone: ${CU.phone||'—'}<br/>Known Conditions: <span style="color:var(--orange)">${CU.conditions||'None recorded'}</span>`;
+  document.getElementById('ptHealth').innerHTML = h;
+  document.getElementById('ptProf').innerHTML   = h;
+}
+
+/* ═══ ADMIN ═══ */
+async function loadAdminData() {
+  if (!isAdmin()) return;
+  const [stats, pending, orders, pds, vendors, prods] = await Promise.all([
+    api('/admin/stats/'),
+    api('/admin/pending/'),
+    api('/admin/orders/'),
+    api('/admin/pickdrops/'),
+    api('/admin/vendors/'),
+    api('/admin/products/'),
+  ]);
+
+  if (stats) {
+    document.getElementById('aV').textContent  = stats.vendors;
+    document.getElementById('aP').textContent  = stats.products;
+    document.getElementById('aO').textContent  = stats.orders;
+    document.getElementById('aPD').textContent = stats.pickdrops;
+  }
+
+  // Pending verifications
+  const pendEl = document.getElementById('admPend');
+  pendEl.innerHTML = !(pending&&pending.length) ? '<p style="color:var(--text-muted);font-size:.84rem;">No pending verifications.</p>'
+    : pending.map(u=>`
+      <div class="arow">
+        <div class="ar-ttl">${u.first_name} — <span style="color:var(--orange)">${(u.role||'').toUpperCase()}</span></div>
+        <div class="ar-sub">${u.biz_name||''} · ${u.zone||''}<br/>${u.phone} · ${u.email}<br/>${u.med_role?'Role: '+u.med_role+'<br/>':''}</div>
+        <span class="pend-b">⏳ Pending</span>
+        ${(u.id_front_url||u.id_back_url)?`<div class="id-prev">${u.id_front_url?`<img src="${u.id_front_url}" alt="ID Front"/>`:''} ${u.id_back_url?`<img src="${u.id_back_url}" alt="ID Back"/>`:''}</div>`:''}
+        <div class="ar-acts">
+          <button class="btn-conf" onclick="admConfirm(${u.id})">✓ Confirm</button>
+          <button class="btn-rej"  onclick="admReject(${u.id})">✕ Reject</button>
+        </div>
+      </div>`).join('');
+
+  // Orders
+  const ordEl = document.getElementById('admOrds');
+  ordEl.innerHTML = !(orders&&orders.length) ? '<p style="color:var(--text-muted);font-size:.84rem;">No orders yet.</p>'
+    : orders.map(o=>{
+        const t  = o.created_at ? new Date(o.created_at).toLocaleString() : '—';
+        const gps= o.delivery_lat ? `<a href="https://maps.google.com/?q=${o.delivery_lat},${o.delivery_lng}" target="_blank" style="color:var(--blue-light);font-size:.7rem;">[GPS]</a>` : '';
+        return`<div class="o-item">
+          <div class="o-type">🛒 ORDER</div>
+          <div class="o-det"><strong>${o.customer_name}</strong> · ${o.phone}<br/>📍 ${o.address} ${gps}<br/>${(o.items||[]).map(i=>`${i.name} ×${i.qty}`).join(', ')}<br/><span style="color:var(--orange);font-weight:700;">${Number(o.total||0).toLocaleString()} XAF</span> · <span style="color:var(--yellow);">Escrow: ${o.escrow_status}</span></div>
+          <div class="o-time">${t}</div>
+          <div class="ar-acts">
+            <button class="btn-cht" onclick="openChat('ORD-${o.id}','${(o.customer_name||'').replace(/'/g,"\\'")}','order','','',null,null)">💬 Chat</button>
+            <button class="btn-conf" onclick="admReleaseEscrow(${o.id})">✓ Release Escrow</button>
+          </div>
+        </div>`;}).join('');
+
+  // Pick & Drop
+  const pdEl = document.getElementById('admPDs');
+  pdEl.innerHTML = !(pds&&pds.length) ? '<p style="color:var(--text-muted);font-size:.84rem;">No Pick & Drop orders.</p>'
+    : pds.map(p=>{
+        const t  = p.created_at ? new Date(p.created_at).toLocaleString() : '—';
+        const pg = p.pickup_lat ? `<a href="https://maps.google.com/?q=${p.pickup_lat},${p.pickup_lng}" target="_blank" style="color:var(--blue-light);font-size:.7rem;">[GPS]</a>` : '';
+        const dg = p.drop_lat   ? `<a href="https://maps.google.com/?q=${p.drop_lat},${p.drop_lng}" target="_blank" style="color:var(--blue-light);font-size:.7rem;">[GPS]</a>` : '';
+        return`<div class="o-item">
+          <div class="o-type">🚁 PICK & DROP</div>
+          <div class="o-det"><strong>${p.customer_name}</strong> · ${p.customer_phone}<br/>Item: ${p.description}<br/>📍 ${p.pickup_text} ${pg}<br/>🏁 ${p.drop_text} ${dg}<br/><span style="color:var(--orange);font-weight:700;">${Number(p.estimated_value||0).toLocaleString()} XAF</span> · <span style="color:var(--yellow);">${p.security_status}</span></div>
+          <div class="o-time">${t}</div>
+          <div class="ar-acts">
+            <button class="btn-cht" onclick="openChat('PD-${p.id}','${(p.customer_name||'').replace(/'/g,"\\'")}','pickdrop','${(p.pickup_text||'').replace(/'/g,"\\'")}','${(p.drop_text||'').replace(/'/g,"\\'")}',${p.pickup_lat?JSON.stringify({lat:p.pickup_lat,lng:p.pickup_lng}):'null'},${p.drop_lat?JSON.stringify({lat:p.drop_lat,lng:p.drop_lng}):'null'})">💬 Chat</button>
+            <button class="btn-conf" onclick="admApprovePD(${p.id})">✓ Approve</button>
+          </div>
+        </div>`;}).join('');
+
+  // Vendors
+  if (vendors) {
+    document.getElementById('admVends').innerHTML = !(vendors.vendors&&vendors.vendors.length) ? '<p style="color:var(--text-muted);font-size:.84rem;">No vendors.</p>'
+      : vendors.vendors.map(u=>`<div class="arow"><div class="ar-ttl">${u.first_name}</div><div class="ar-sub">${u.biz_name||'—'} · ${u.zone||'—'}<br/>${u.phone} · ${u.email}</div><span class="badge bd-b">Vendor</span></div>`).join('');
+    document.getElementById('admMed').innerHTML = !(vendors.medical&&vendors.medical.length) ? '<p style="color:var(--text-muted);font-size:.84rem;">No medical personnel.</p>'
+      : vendors.medical.map(u=>`<div class="arow"><div class="ar-ttl">${u.first_name}</div><div class="ar-sub">${u.biz_name||'—'} · ${u.med_role||'—'}<br/>${u.phone} · ${u.email}</div><span class="badge bd-o">Medical</span></div>`).join('');
+  }
+
+  // Products
+  const prodEl = document.getElementById('admProds');
+  prodEl.innerHTML = !(prods&&prods.length) ? '<p style="color:var(--text-muted);font-size:.84rem;">No products.</p>'
+    : prods.map(p=>`
+      <div class="arow">
+        <div style="float:right;"><button class="btn-rej btn-sm" onclick="admDelProd(${p.id})">Delete</button></div>
+        <div class="ar-ttl">${p.emoji||'📦'} ${p.name}</div>
+        <div class="ar-sub">${p.category} · ${Number(p.price).toLocaleString()} XAF · Stock: ${p.stock}<br/>by ${p.vendor_name}</div>
+      </div>`).join('');
+}
+
+async function admConfirm(uid) {
+  if (!confirm('Confirm this account?')) return;
+  const ok = await api(`/admin/users/${uid}/confirm/`, { method:'POST' });
+  if (ok) { toast('Account confirmed ✅'); loadAdminData(); }
+}
+async function admReject(uid) {
+  if (!confirm('Reject and delete this account?')) return;
+  const ok = await api(`/admin/users/${uid}/reject/`, { method:'DELETE' });
+  if (ok !== null) { toast('Account rejected.'); loadAdminData(); }
+}
+async function admReleaseEscrow(id) {
+  if (!confirm('Release escrow payment to vendor?')) return;
+  const ok = await api(`/admin/orders/${id}/release/`, { method:'POST' });
+  if (ok) { toast('Escrow released ✅'); loadAdminData(); }
+}
+async function admApprovePD(id) {
+  const ok = await api(`/admin/pickdrops/${id}/approve/`, { method:'POST' });
+  if (ok) { toast('Pick & Drop approved ✅'); loadAdminData(); }
+}
+async function admDelProd(id) {
+  if (!confirm('Delete this product?')) return;
+  const ok = await api(`/admin/products/${id}/`, { method:'DELETE' });
+  if (ok !== null) { toast('Product deleted.'); loadAdminData(); }
+}
+
+/* ═══ FAQ ═══ */
+function toggleFaq(el) {
+  const item=el.parentElement, isOpen=item.classList.contains('open');
+  document.querySelectorAll('.fi-item').forEach(i=>i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+/* ═══ MODALS ═══ */
+function closeModal(id) { document.getElementById(id).classList.remove('on'); }
+function showOkModal(ic,tt,bd,btn1lbl,btn2lbl,action2) {
+  document.getElementById('mOkIc').textContent  = ic;
+  document.getElementById('mOkTt').textContent  = tt;
+  document.getElementById('mOkBd').textContent  = bd;
+  document.getElementById('mOkBtn1').textContent= btn1lbl;
+  const b2 = document.getElementById('mOkBtn2');
+  if (btn2lbl&&action2) { b2.style.display='inline-block'; b2.textContent=btn2lbl; modal2Action=action2; }
+  else { b2.style.display='none'; modal2Action=null; }
+  document.getElementById('modalOk').classList.add('on');
+}
+function modalAction2() { if (modal2Action) { closeModal('modalOk'); modal2Action(); } }
+
+/* ═══ ALERTS ═══ */
+function showA(id,msg) { const el=document.getElementById(id); if(el){if(msg)el.textContent=msg; el.classList.add('on');} }
+function hideA(id)     { const el=document.getElementById(id); if(el) el.classList.remove('on'); }
+
+/* ═══ TOAST ═══ */
+let toastT;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('on'), 2800);
+}
+
+/* ═══ SCROLL REVEAL ═══ */
+function initReveal() {
+  const io = new IntersectionObserver(entries =>
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('vis');
+        io.unobserve(e.target);
+      }
+    }),
+    { threshold: 0, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+}
+</script>
+</body>
+</html>
